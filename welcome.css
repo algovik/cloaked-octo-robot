@@ -1,1 +1,39 @@
 /* welcome.css */
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.main {
+	position:relative;
+	width:600px;
+	height:400px;
+	margin: 100px auto;
+	background-color:gray;
+}
+
+#logoBox {
+	position:absolute;
+	left:0px;
+	width:340px;
+	height:400px;
+	background-color:blue;
+}
+
+#loginBox {
+	position:absolute;
+	right:0px;
+	width:250px;
+	height:150px;
+	background-color:red;
+}
+
+#signupBox {
+	position:absolute;
+	right:0px;
+	bottom:0px;
+	width:250px;
+	height:250px;
+	background-color:yellow;
+}
