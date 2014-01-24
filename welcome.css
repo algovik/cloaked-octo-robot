@@ -5,35 +5,71 @@
           box-sizing: border-box;
 }
 
-.main {
+html, body {
+	font-size: 0.8em;
+	font-family:"Cousine","Helvetica Neue",Helvetica,sans-serif;
+}
+
+#main {
 	position:relative;
-	width:600px;
+	max-width:600px;
 	height:400px;
-	margin: 100px auto;
-	background-color:gray;
+	margin:100px auto;
+}
+
+.bordered {
+	border-style:dotted;
+	border-color:black;
+	border-width: 1px;
 }
 
 #logoBox {
+	float:left;
+	width:58%;
+	height:100%;
+	background-color: white;
+	margin-right:2%;
+	text-align: center;
+
+	/*Absolute positioning
+	
 	position:absolute;
 	left:0px;
 	width:340px;
 	height:400px;
-	background-color:blue;
+	background-color:white;*/
 }
 
 #loginBox {
+	float:right;
+	width:40%;
+	height:36%;
+	background-color: white;
+	margin-bottom:2%;
+	text-align: center;
+
+	/*Absolute positioning
+
 	position:absolute;
 	right:0px;
 	width:250px;
-	height:150px;
-	background-color:red;
+	height:145px;
+	background-color:white;*/
 }
 
 #signupBox {
+	float:right;
+	width:40%;
+	height:61%;
+	background-color: white;
+	text-align: center;
+
+	/*Absolute positioning
+
 	position:absolute;
 	right:0px;
 	bottom:0px;
 	width:250px;
-	height:250px;
-	background-color:yellow;
+	height:245px;
+	background-color:white;*/
 }
