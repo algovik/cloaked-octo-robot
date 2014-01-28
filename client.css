@@ -87,6 +87,14 @@ h4 {
 	background-color:white;*/
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+    border-style: solid;
+}
+
 label {
 	float:left;
 	margin-top:5px;
@@ -104,16 +112,16 @@ input {
 	width:50%;
 }
 
+input[type="Submit"]{
+	width:auto;
+}
+
 select {
 	float:right;
 	margin-top:5px;
 	margin-right:5px;
 	width:50%;
 	border: 1px dotted black;
-}
-
-input[type="Submit"]{
-	width:auto;
 }
 
 .invalidEntry {
