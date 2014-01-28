@@ -10,8 +10,6 @@ function validateLogin(){
 		changeBorderColor(document.getElementById("username"), 2);
 		bool=false;
 	}
-	else{
-	}
 
 	x = document.forms["login"]["password"].value;
 	if (x==null||x=="")
@@ -19,8 +17,7 @@ function validateLogin(){
 		changeBorderColor(document.getElementById("password"), 2);
 		bool=false;
 	}
-	else{
-	}
+	
 	return bool;
 }
 
@@ -84,7 +81,7 @@ function validateSignup(){
 			bool=false;
 		};
 
-return bool;
+	return bool;
 
 }
 
