@@ -12,7 +12,7 @@
 					<form name="login" onsubmit="return validateLogin()">
 						<div class="formRow">
 							<label for="username">Username:</label>
-							<input type="text" id="username" name="username" class="standardBorder">
+							<input type="text" id="username" name="username" class="standardBorder" onchange="changeBorderColor(this)"> <!-- change border color of THIS input element -->
 						</div>
 						<div class="formRow">
 							<label for="password">Password:</label>
