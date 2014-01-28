@@ -87,6 +87,14 @@ h4 {
 	background-color:white;*/
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+    border-style: solid;
+}
+
 label {
 	float:left;
 	margin-top:5px;
@@ -104,10 +112,6 @@ input {
 	width:50%;
 }
 
-.invalidEntry {
-	border: 1px dotted red;
-}
-
 input[type="Submit"]{
 	width:auto;
 }
@@ -120,17 +124,6 @@ select {
 	border: 1px dotted black;
 }
 
-/*.formLabel {
-	margin-left:5px;
-	text-align:left;
-	font-weight:bold;
-}*/
-
-/*.formInput {
-	width:50%;
-	text-align:right;
-}*/
-
-
-
-
+.invalidEntry {
+	border: 1px dotted red;
+}
