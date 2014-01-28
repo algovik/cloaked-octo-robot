@@ -104,18 +104,18 @@ input {
 	width:50%;
 }
 
-input[type="Submit"]{
-	width:auto;
-}
-
-.invalidEntry {
-	border: 1px dotted red;
-}
-
 select {
 	float:right;
 	margin-top:5px;
 	margin-right:5px;
 	width:50%;
 	border: 1px dotted black;
+}
+
+input[type="Submit"]{
+	width:auto;
+}
+
+.invalidEntry {
+	border: 1px dotted red;
 }
