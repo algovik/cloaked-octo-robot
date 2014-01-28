@@ -10,10 +10,11 @@
 				</div>
 				<div class="dotBorder" id="loginBox">
 					<form name="login" onsubmit="return validateLogin()">
+
 						<label for="username">Username:</label>
-						<input type="text" id="username" name="username" class="dotBorder">					
+						<input type="text" id="username" name="username" class="dotBorder" onchange="changeBorderColor(this, 1)">					
 						<label for="password">Password:</label>
-						<input type="password" id="password" name="password" class="dotBorder">
+						<input type="password" id="password" name="password" class="dotBorder" onchange="changeBorderColor(this, 1)">
 						<label>Error Msg</label>
 						<input class="dotBorder" type="Submit" value="Login">
 					</form>
