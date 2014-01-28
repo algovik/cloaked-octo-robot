@@ -25,45 +25,74 @@ function validateLogin(){
 }
 
 function validateSignup(){
+	var bool=true;
 	var x = document.forms["signup"]["firstName"].value;
 	if(x==null||x=="")
 	{
-		document.getElementById("firstName").style.border="1px dotted red";
-		return false;
+		changeBorderColor(document.getElementById("firstName"), 2);
+		bool=false;
 	}
 
 	x = document.forms["signup"]["familyName"].value;
 	if(x==null||x=="")
 	{
-		document.getElementById("familyName").style.border="1px dotted red";
-		return false;
+		changeBorderColor(document.getElementById("familyName"), 2);
+		bool=false;
 	}
 
 	x = document.forms["signup"]["city"].value;
 	if(x==null||x=="")
 	{
-		document.getElementById("city").style.border="1px dotted red";
-		return false;
+		changeBorderColor(document.getElementById("city"), 2);
+		bool=false;
 	}
 
 	x = document.forms["signup"]["country"].value;
 	if(x==null||x=="")
 	{
-		document.getElementById("country").style.border="1px dotted red";
-		return false;
+		changeBorderColor(document.getElementById("country"), 2);
+		bool=false;
 	}
 
+	x = document.forms["signup"]["email"].value;
+	if(x==null||x=="")
+	{
+		changeBorderColor(document.getElementById("email"), 2);
+		bool=false;
+	}
 
+	x = document.forms["signup"]["newPassword"].value;
+	if(x==null||x=="")
+	{
+		changeBorderColor(document.getElementById("newPassword"), 2);
+		bool=false;
+	}
 
+	y = document.forms["signup"]["confirmPassword"].value;
+	if(y==null||y=="")
+	{
+		changeBorderColor(document.getElementById("confirmPassword"), 2);
+		bool=false;
+	}
+
+	if (x!=y)
+		{
+			changeBorderColor(document.getElementById("newPassword"), 2);
+			changeBorderColor(document.getElementById("confirmPassword"), 2);
+			bool=false;
+		};
+
+return bool;
 
 }
 
+
 function changeBorderColor(inputfield, color){
-	if (color==1)  //1 gives the standard black bordercolor
+	if (color==1)  //1 gives the standard black border color
 	{
 		inputfield.className="dotBorder";
 	}
-	else 		//anything else and we change to red
+	else 		//anything else and we change to red border color
 	{
 		inputfield.className="invalidEntry";
 	}
