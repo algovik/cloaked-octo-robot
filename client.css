@@ -104,12 +104,12 @@ input {
 	width:50%;
 }
 
-.invalidEntry {
-	border: 1px dotted red;
-}
-
 input[type="Submit"]{
 	width:auto;
+}
+
+.invalidEntry {
+	border: 1px dotted red;
 }
 
 select {
@@ -119,18 +119,3 @@ select {
 	width:50%;
 	border: 1px dotted black;
 }
-
-/*.formLabel {
-	margin-left:5px;
-	text-align:left;
-	font-weight:bold;
-}*/
-
-/*.formInput {
-	width:50%;
-	text-align:right;
-}*/
-
-
-
-
