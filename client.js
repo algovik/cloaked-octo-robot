@@ -79,6 +79,8 @@ function validateSignup(){
 		{
 			changeBorderColor(document.getElementById("newPassword"), 2);
 			changeBorderColor(document.getElementById("confirmPassword"), 2);
+			document.forms["signup"]["newPassword"].value="";
+			document.forms["signup"]["confirmPassword"].value="";
 			bool=false;
 		};
 
