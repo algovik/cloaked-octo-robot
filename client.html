@@ -5,60 +5,36 @@
 		<script src="serverstub.js" type="text/javascript"></script>
 		<script type="text/view" id="welcomeBody">
 			<div id="main">
-				<div class="dotBordered" id="logoBox">
+				<div class="dotBorder" id="logoBox">
 					<img src="img/wimage.png">
 				</div>
-				<div class="dotBordered" id="loginBox">
+				<div class="dotBorder" id="loginBox">
 					<form name="login" onsubmit="return validateLogin()">
-						<div class="formRow">
-							<label for="username">Username:</label>
-							<input type="text" id="username" name="username" class="standardBorder">
-						</div>
-						<div class="formRow">
-							<label for="password">Password:</label>
-							<input type="password" id="password" name="password" class="standardBorder">
-						</div>
-						<div class="formRow">
-							Error Msg
-							<input type="Submit" value="Login">
-						</div>
+						<label for="username">Username:</label>
+						<input type="text" id="username" name="username" class="standardBorder">					
+						<label for="password">Password:</label>
+						<input type="password" id="password" name="password" class="standardBorder">
+						<label>Error Msg</label>
+						<input type="Submit" value="Login">
 					</form>
 				</div>
-				<div class="dotBordered" id="signupBox">
+				<div class="dotBorder" id="signupBox">
 					<h4>Sign Up Here!</h4>
 					<form name="signup" onsubmit="return validateSignup()">
-						<div class="formRow">
-							<label for="firstName">First Name:</label><input type="text" id="firstName" name="firstName">
-						</div>
-						<div class="formRow">
-							<label for="familyName">Family Name:</label><input type="text" id="familyName" name="familyName">
-						</div>
-						<div class="formRow">
-							<label for="gender">Gender:</label><select id="gender" name="gender">
-								<option value="male">Male</option>
-								<option value="female">Female</option>
-								<option value="other">Other</option>
-							</select>
-						</div>
-						<div class="formRow">
-							<label for="city">City:</label><input type="text" id="city" name="city">
-						</div>
-						<div class="formRow">
-							<label for="country">Country:</label><input type="text" id="country" name="country">
-						</div>
-						<div class="formRow">
-							<label for="email">Email:</label><input type="text" id="email" name="email">
-						</div>
-						<div class="formRow">
-							<label for="newPassword">Password:</label><input type="password" id="newPassword" name="newPassword">
-						</div>
-						<div class="formRow">
-							<label for="confirmPassword">Confirm Pwd:</label><input type="password" id="confirmPassword" name="confirmPassword">
-						</div>
-						<div class="formRow">
-							Error Msg
-							<input type="Submit" value="Signup">
-						</div>
+						<label for="firstName">First Name:</label><input type="text" id="firstName" name="firstName">
+						<label for="familyName">Family Name:</label><input type="text" id="familyName" name="familyName">
+						<label for="gender">Gender:</label><select id="gender" name="gender">
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+							<option value="other">Other</option>
+						</select>
+						<label for="city">City:</label><input type="text" id="city" name="city">
+						<label for="country">Country:</label><input type="text" id="country" name="country">
+						<label for="email">Email:</label><input type="text" id="email" name="email">
+						<label for="newPassword">Password:</label><input type="password" id="newPassword" name="newPassword">
+						<label for="confirmPassword">Confirm Pwd:</label><input type="password" id="confirmPassword" name="confirmPassword">
+						<label>Error Msg</label>
+						<input type="Submit" value="Signup">
 					</form>
 				</div>
 			</div>
@@ -67,10 +43,8 @@
 		</script>
 	</head>
 	<body>		
-		<div id="welcomeView">
-		</div>
-		<div id="profileView">
-		</div>
+		<div id="welcomeView"></div>
+		<div id="profileView"></div>
 		<script> window.onload = loadView;</script>
 	</body>
 </html>
