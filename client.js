@@ -7,21 +7,19 @@ function validateLogin(){
 	var x = document.forms["login"]["username"].value;
 	if (x==null||x=="")
 	{
-		document.getElementById("username").className ="invalidEntry";
+		changeBorderColor(document.getElementById("username"), 2);
 		bool=false;
 	}
 	else{
-		document.getElementById("username").className="standardBorder";
 	}
 
 	x = document.forms["login"]["password"].value;
 	if (x==null||x=="")
 	{
-		document.getElementById("password").className ="invalidEntry";
+		changeBorderColor(document.getElementById("password"), 2);
 		bool=false;
 	}
 	else{
-		document.getElementById("password").className="standardBorder";
 	}
 	return bool;
 }
@@ -60,8 +58,15 @@ function validateSignup(){
 
 }
 
-function changeBorderColor(inputfield){
-	
+function changeBorderColor(inputfield, color){
+	if (color==1)  //1 gives the standard black bordercolor
+	{
+		inputfield.className="dotBorder";
+	}
+	else 		//anything else and we change to red
+	{
+		inputfield.className="invalidEntry";
+	}
 }
 
 
