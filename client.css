@@ -106,6 +106,13 @@ h4 {
 	margin-top:5px;
 	margin-right:5px;
 	width:50%;
+}
+
+.invalidEntry {
+	border: 1px dotted red;
+}
+
+.standardBorder {
 	border: 1px dotted black;
 }
 
@@ -136,5 +143,7 @@ h4 {
 	text-align:right;
 }*/
 
-
+.error {
+	border: 1px red;
+}
 
