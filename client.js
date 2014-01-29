@@ -4,20 +4,26 @@ function loadView(){
 
 function validateLogin(formVar){
 	var bool=true;
-	var x = formVar["username"].value;
-	if (x==null||x=="")
+	var username = formVar["username"].value;
+	if (username==null||username=="")
 	{
-		changeBorderColor(document.getElementById("username"), 2);
+		changeBorderColor(formVar["username"], 2);
 		bool=false;
 	}
 
-	x = formVar["password"].value;
-	if (x==null||x=="")
+	var password = formVar["password"].value;
+	if (password==null||password=="")
 	{
-		changeBorderColor(document.getElementById("password"), 2);
+		changeBorderColor(formVar["password"], 2);
 		bool=false;
 	}
 	
+	if(bool==true)
+	{
+		var result = serverstub.signIn(username, password);
+		alert(result["message"]);
+	}
+
 	return bool;
 }
 
@@ -26,56 +32,56 @@ function validateSignup(formVar){
 	var x = formVar["firstName"].value;
 	if(x==null||x=="")
 	{
-		changeBorderColor(document.getElementById("firstName"), 2);
+		changeBorderColor(formVar["firstName"], 2);
 		bool=false;
 	}
 
 	x = formVar["familyName"].value;
 	if(x==null||x=="")
 	{
-		changeBorderColor(document.getElementById("familyName"), 2);
+		changeBorderColor(formVar["familyName"], 2);
 		bool=false;
 	}
 
 	x = formVar["city"].value;
 	if(x==null||x=="")
 	{
-		changeBorderColor(document.getElementById("city"), 2);
+		changeBorderColor(formVar["city"], 2);
 		bool=false;
 	}
 
 	x = formVar["country"].value;
 	if(x==null||x=="")
 	{
-		changeBorderColor(document.getElementById("country"), 2);
+		changeBorderColor(formVar["country"], 2);
 		bool=false;
 	}
 
 	x = formVar["email"].value;
 	if(x==null||x=="")
 	{
-		changeBorderColor(document.getElementById("email"), 2);
+		changeBorderColor(formVar["email"], 2);
 		bool=false;
 	}
 
 	x = formVar["newPassword"].value;
 	if(x==null||x=="")
 	{
-		changeBorderColor(document.getElementById("newPassword"), 2);
+		changeBorderColor(formVar["newPassword"], 2);
 		bool=false;
 	}
 
 	y = formVar["confirmPassword"].value;
 	if(y==null||y=="")
 	{
-		changeBorderColor(document.getElementById("confirmPassword"), 2);
+		changeBorderColor(formVar["confirmPassword"], 2);
 		bool=false;
 	}
 
 	if (x!=y)
 		{
-			changeBorderColor(document.getElementById("newPassword"), 2);
-			changeBorderColor(document.getElementById("confirmPassword"), 2);
+			changeBorderColor(formVar["newPassword"], 2);
+			changeBorderColor(formVar["confirmPassword"], 2);
 			formVar["newPassword"].value="";
 			formVar["confirmPassword"].value="";
 			bool=false;
