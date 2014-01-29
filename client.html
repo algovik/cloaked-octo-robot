@@ -15,7 +15,7 @@
 					<img src="img/wimage.png">
 				</div>
 				<div id="loginBox" class="dotBorder">
-					<form name="login" onsubmit="return validateLogin()">
+					<form name="login" onsubmit="return validateLogin(this)">
 
 						<label for="username">Username:</label>
 						<input type="text" id="username" class="dotBorder" name="username" onkeypress="changeBorderColor(this, 1)">					
@@ -27,7 +27,7 @@
 				</div>
 				<div id="signupBox" class="dotBorder">
 					<h4>Sign Up Here!</h4>
-					<form name="signup" onsubmit="return validateSignup()">
+					<form name="signup" onsubmit="return validateSignup(this)">
 						<label for="firstName">First Name:</label><input type="text" id="firstName" class="dotBorder" name="firstName" onkeypress="changeBorderColor(this, 1)">
 						<label for="familyName">Family Name:</label><input type="text" id="familyName" class="dotBorder" name="familyName" onkeypress="changeBorderColor(this, 1)">
 						<label for="gender">Gender:</label><select id="gender" class="dotBorder" name="gender">

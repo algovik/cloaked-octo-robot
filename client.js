@@ -2,16 +2,16 @@ function loadView(){
 	document.getElementById("welcomeView").innerHTML = document.getElementById("welcomeBody").innerHTML;
 }
 
-function validateLogin(){
+function validateLogin(formVar){
 	var bool=true;
-	var x = document.forms["login"]["username"].value;
+	var x = formVar["username"].value;
 	if (x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("username"), 2);
 		bool=false;
 	}
 
-	x = document.forms["login"]["password"].value;
+	x = formVar["password"].value;
 	if (x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("password"), 2);
@@ -21,51 +21,51 @@ function validateLogin(){
 	return bool;
 }
 
-function validateSignup(){
+function validateSignup(formVar){
 	var bool=true;
-	var x = document.forms["signup"]["firstName"].value;
+	var x = formVar["firstName"].value;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("firstName"), 2);
 		bool=false;
 	}
 
-	x = document.forms["signup"]["familyName"].value;
+	x = formVar["familyName"].value;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("familyName"), 2);
 		bool=false;
 	}
 
-	x = document.forms["signup"]["city"].value;
+	x = formVar["city"].value;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("city"), 2);
 		bool=false;
 	}
 
-	x = document.forms["signup"]["country"].value;
+	x = formVar["country"].value;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("country"), 2);
 		bool=false;
 	}
 
-	x = document.forms["signup"]["email"].value;
+	x = formVar["email"].value;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("email"), 2);
 		bool=false;
 	}
 
-	x = document.forms["signup"]["newPassword"].value;
+	x = formVar["newPassword"].value;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("newPassword"), 2);
 		bool=false;
 	}
 
-	y = document.forms["signup"]["confirmPassword"].value;
+	y = formVar["confirmPassword"].value;
 	if(y==null||y=="")
 	{
 		changeBorderColor(document.getElementById("confirmPassword"), 2);
@@ -76,8 +76,8 @@ function validateSignup(){
 		{
 			changeBorderColor(document.getElementById("newPassword"), 2);
 			changeBorderColor(document.getElementById("confirmPassword"), 2);
-			document.forms["signup"]["newPassword"].value="";
-			document.forms["signup"]["confirmPassword"].value="";
+			formVar["newPassword"].value="";
+			formVar["confirmPassword"].value="";
 			bool=false;
 		};
 if (bool==true)
