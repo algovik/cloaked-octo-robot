@@ -11,37 +11,37 @@
 		<script src="serverstub.js" type="text/javascript"></script>
 		<script type="text/view" id="welcomeBody">
 			<div id="main">
-				<div class="dotBorder" id="logoBox">
+				<div id="logoBox" class="dotBorder">
 					<img src="img/wimage.png">
 				</div>
-				<div class="dotBorder" id="loginBox">
+				<div id="loginBox" class="dotBorder">
 					<form name="login" onsubmit="return validateLogin()">
 
 						<label for="username">Username:</label>
-						<input type="text" id="username" name="username" class="dotBorder" onkeypress="changeBorderColor(this, 1)">					
+						<input type="text" id="username" class="dotBorder" name="username" onkeypress="changeBorderColor(this, 1)">					
 						<label for="password">Password:</label>
-						<input type="password" id="password" name="password" class="dotBorder" onkeypress="changeBorderColor(this, 1)">
+						<input type="password" id="password" class="dotBorder" name="password" onkeypress="changeBorderColor(this, 1)">
 						<label>Error Msg</label>
-						<input class="dotBorder" type="Submit" value="Login">
+						<input type="Submit" class="dotBorder" value="Login">
 					</form>
 				</div>
-				<div class="dotBorder" id="signupBox">
+				<div id="signupBox" class="dotBorder">
 					<h4>Sign Up Here!</h4>
 					<form name="signup" onsubmit="return validateSignup()">
-						<label for="firstName">First Name:</label><input class="dotBorder" type="text" id="firstName" name="firstName" onkeypress="changeBorderColor(this, 1)">
-						<label for="familyName">Family Name:</label><input class="dotBorder" type="text" id="familyName" name="familyName" onkeypress="changeBorderColor(this, 1)">
-						<label for="gender">Gender:</label><select class="dotBorder" id="gender" name="gender">
+						<label for="firstName">First Name:</label><input type="text" id="firstName" class="dotBorder" name="firstName" onkeypress="changeBorderColor(this, 1)">
+						<label for="familyName">Family Name:</label><input type="text" id="familyName" class="dotBorder" name="familyName" onkeypress="changeBorderColor(this, 1)">
+						<label for="gender">Gender:</label><select id="gender" class="dotBorder" name="gender">
 							<option value="male">Male</option>
 							<option value="female">Female</option>
 							<option value="other">Other</option>
 						</select>
-						<label for="city">City:</label><input class="dotBorder" type="text" id="city" name="city" onkeypress="changeBorderColor(this, 1)">
-						<label for="country">Country:</label><input class="dotBorder" type="text" id="country" name="country" onkeypress="changeBorderColor(this, 1)">
-						<label for="email">Email:</label><input class="dotBorder" type="text" id="email" name="email" onkeypress="changeBorderColor(this, 1)">
-						<label for="newPassword">Password:</label><input class="dotBorder" type="password" id="newPassword" name="newPassword" onkeypress="changeBorderColor(this, 1)">
-						<label for="confirmPassword">Confirm Pwd:</label><input class="dotBorder" type="password" id="confirmPassword" name="confirmPassword" onkeypress="changeBorderColor(this, 1)">
+						<label for="city">City:</label><input type="text" id="city" class="dotBorder" name="city" onkeypress="changeBorderColor(this, 1)">
+						<label for="country">Country:</label><input type="text" id="country" class="dotBorder" name="country" onkeypress="changeBorderColor(this, 1)">
+						<label for="email">Email:</label><input type="text" id="email" class="dotBorder" name="email" onkeypress="changeBorderColor(this, 1)">
+						<label for="newPassword">Password:</label><input type="password" id="newPassword" class="dotBorder" name="newPassword" onkeypress="changeBorderColor(this, 1)">
+						<label for="confirmPassword">Confirm Pwd:</label><input type="password" id="confirmPassword" class="dotBorder" name="confirmPassword" onkeypress="changeBorderColor(this, 1)">
 						<label>Error Msg</label>
-						<input class="dotBorder" type="Submit" value="Signup">
+						<input type="Submit" class="dotBorder" value="Signup">
 					</form>
 				</div>
 			</div>
