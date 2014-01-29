@@ -23,7 +23,11 @@ function validateLogin(formVar){
 
 function validateSignup(formVar){
 	var bool=true;
+	var formData=new Array(); //This object will contain the form data that will be passed on to the server.
+	formData["gender"]=formVar["gender"].value;
+
 	var x = formVar["firstName"].value;
+	formData["firstname"]=x;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("firstName"), 2);
@@ -31,6 +35,7 @@ function validateSignup(formVar){
 	}
 
 	x = formVar["familyName"].value;
+	formData["familyname"]=x;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("familyName"), 2);
@@ -38,6 +43,7 @@ function validateSignup(formVar){
 	}
 
 	x = formVar["city"].value;
+	formData["city"]=x;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("city"), 2);
@@ -45,6 +51,7 @@ function validateSignup(formVar){
 	}
 
 	x = formVar["country"].value;
+	formData["country"]=x;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("country"), 2);
@@ -52,6 +59,7 @@ function validateSignup(formVar){
 	}
 
 	x = formVar["email"].value;
+	formData["email"]=x;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("email"), 2);
@@ -59,6 +67,7 @@ function validateSignup(formVar){
 	}
 
 	x = formVar["newPassword"].value;
+	formData["password"]=x;
 	if(x==null||x=="")
 	{
 		changeBorderColor(document.getElementById("newPassword"), 2);
@@ -82,7 +91,9 @@ function validateSignup(formVar){
 		};
 if (bool==true)
 {
-	console.log("Successful signup!");
+	//console.log("Successful signup!");
+	var serverResponse=serverstub.signUp(formData);
+	alert(serverResponse["message"]);
 }
 return bool;
 
