@@ -84,6 +84,11 @@ function validateSignup(){
 			bool=false;
 		};
 
+
+if (bool==true)
+{
+	console.log("Successful signup!");
+}
 return bool;
 
 }
