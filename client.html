@@ -17,10 +17,10 @@
 				<div id="loginBox" class="dotBorder">
 					<form name="login" onsubmit="return validateLogin(this)">
 						<label for="username">Username:</label>
-						<input type="text" id="username" class="dotBorder" name="username" onkeypress="changeBorderColor(this, 1)">					
+						<input type="text" id="username" class="dotBorder" name="username" onkeypress="changeBorderColor(this, 1); removeLoginMsg()">
 						<label for="password">Password:</label>
-						<input type="password" id="password" class="dotBorder" name="password" onkeypress="changeBorderColor(this, 1)">
-						<label>Error Msg</label>
+						<input type="password" id="password" class="dotBorder" name="password" onkeypress="changeBorderColor(this, 1); removeLoginMsg()">
+						<label id="loginMsg"></label>
 						<input type="Submit" class="dotBorder" value="Login">
 					</form>
 				</div>
@@ -51,7 +51,16 @@
 	<body>		
 		<div id="welcomeView"></div>
 		<div id="profileView"></div>
-		<script> window.onload = loadView;</script>
+		<script>
+			window.onload = loadView;			
+			//Tests whether or not a login token exists.
+			/*localStorage.clear();
+			if(localStorage.token){
+				alert("token exist");
+			} else {
+				alert("no token");
+			}*/
+		</script>
 	</body>
 </html>
 
