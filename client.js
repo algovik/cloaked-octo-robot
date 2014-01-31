@@ -1,5 +1,9 @@
 function loadView(){
-	document.getElementById("welcomeView").innerHTML = document.getElementById("welcomeBody").innerHTML;
+	if(localStorage.token){
+		document.getElementById("displayView").innerHTML = document.getElementById("profileView").innerHTML; //Shows profileView when user already has a token.
+	} else {
+		document.getElementById("displayView").innerHTML = document.getElementById("welcomeView").innerHTML; //Else it shows the welcomeView.
+	}
 }
 
 function validateLogin(formVar){
@@ -18,7 +22,8 @@ function validateLogin(formVar){
 	
 	if(bool==true){
 		var serverResponse = serverstub.signIn(username, password);
-		if(serverResponse["success"]){
+		bool=serverResponse["success"]
+		if(bool){
 			localStorage.token = serverResponse["data"]; //If login is successful, a session token is stored locally
 		} else {
 			changeBorderColor(formVar["username"], 2);
@@ -26,7 +31,7 @@ function validateLogin(formVar){
 			document.getElementById("loginMsg").innerHTML = serverResponse["message"];
 		}
 	}
-	return false;
+	return bool;
 }
 
 function removeLoginMsg(){
