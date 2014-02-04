@@ -5,6 +5,23 @@ function loadView(){
 		document.getElementById("displayView").innerHTML = document.getElementById("welcomeView").innerHTML; //Else it shows the welcomeView.
 	}
 }
+//Not fully functioning
+function logout(){
+	localStorage.removeItem("token");
+}
+
+function tab(tab){
+	//Reset all the tabs
+	document.getElementById("home").style.display="none";
+	document.getElementById("browse").style.display="none";
+	document.getElementById("account").style.display="none";
+	document.getElementById("li_home").setAttribute("class","");
+	document.getElementById("li_browse").setAttribute("class","");
+	document.getElementById("li_account").setAttribute("class","");
+	//Load appropriate tab
+	document.getElementById(tab).style.display="block";
+	document.getElementById("li_"+tab).setAttribute("class","active");
+}
 
 function validateLogin(formVar){
 	var bool=true;
