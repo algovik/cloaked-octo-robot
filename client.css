@@ -1,6 +1,5 @@
 /* client.css */
 
-/* welcome.css */
 * {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -20,7 +19,7 @@ h4 {
 	margin:0.2em;
 }
 
-#main {
+#welcomeMain {
 	position:relative;
 	max-width:600px;
 	height:400px;
@@ -126,4 +125,62 @@ select {
 
 .invalidEntry {
 	border: 1px dotted red;
+}
+
+#profileMain {
+	position:relative;
+	max-width:600px;
+	margin: auto;
+}
+
+#tabs ul {
+padding: 0px;
+margin: 0px;
+margin-left: 10px;
+list-style-type: none;
+}
+
+#tabs ul li {
+display: inline-block;
+clear: none;
+float: left;
+height: 24px;
+}
+
+#tabs ul li a {
+position: relative;
+margin-top: 16px;
+display: block;
+margin-left: 6px;
+line-height: 24px;
+padding-left: 10px;
+background: #f6f6f6;
+z-index: 9999;
+border: 1px dotted black;
+border-bottom: 0px;
+-moz-border-radius-topleft: 4px;
+border-top-left-radius: 4px;
+-moz-border-radius-topright: 4px;
+border-top-right-radius: 4px;
+width: 130px;
+color: #000000;
+text-decoration: none;
+font-weight: bold;
+}
+
+#tabs ul li a:hover {
+text-decoration: underline;
+}
+
+#tabs #ContentArea {
+padding: 0 15px;
+clear:both;
+overflow:hidden;
+line-height:19px;
+position: relative;
+top: 20px;
+z-index: 5;
+height: 500px;
+overflow: hidden;
+background-color:white;
 }
