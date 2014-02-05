@@ -120,7 +120,6 @@ function validateSignup(formVar){
 	if(bool==true){
 		var serverResponse = serverstub.signUp(formData);
 		var successBool=serverResponse["success"];
-		alert(serverResponse["message"]);
 		createSignupMessage(serverResponse["message"]);
 		if(!successBool){ // user already exists
 			changeBorderColor(formVar["email"], 2);
