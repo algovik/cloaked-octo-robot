@@ -27,21 +27,21 @@
 				<div id="signupBox" class="dotBorder">
 					<h4>Sign Up Here!</h4>
 					<form name="signup" onsubmit="return validateSignup(this)">
-						<label for="firstName">First Name:</label><input type="text" id="firstName" class="dotBorder" name="firstName" onkeypress="changeBorderColor(this, 1)">
-						<label for="familyName">Family Name:</label><input type="text" id="familyName" class="dotBorder" name="familyName" onkeypress="changeBorderColor(this, 1)">
-						<label for="gender">Gender:</label><select id="gender" class="dotBorder" name="gender">
+						<label for="firstName">First Name:</label><input type="text" id="firstName" class="dotBorder signupInput" name="firstName" onkeypress="changeBorderColor(this, 1)">
+						<label for="familyName">Family Name:</label><input type="text" id="familyName" class="dotBorder signupInput" name="familyName" onkeypress="changeBorderColor(this, 1)">
+						<label for="gender">Gender:</label><select id="gender" class="dotBorder signupInput" name="gender">
 							<option value="male">Male</option>
 							<option value="female">Female</option>
 							<option value="other">Other</option>
 						</select>
-						<label for="city">City:</label><input type="text" id="city" class="dotBorder" name="city" onkeypress="changeBorderColor(this, 1)">
-						<label for="country">Country:</label><input type="text" id="country" class="dotBorder" name="country" onkeypress="changeBorderColor(this, 1)">
-						<label for="email">Email:</label><input type="text" id="email" class="dotBorder" name="email" onkeypress="changeBorderColor(this, 1)">
-						<label for="newPassword">Password:</label><input type="password" id="newPassword" class="dotBorder" name="newPassword" onkeypress="changeBorderColor(this, 1)">
-						<label for="confirmPassword">Confirm Pwd:</label><input type="password" id="confirmPassword" class="dotBorder" name="confirmPassword" onkeypress="changeBorderColor(this, 1)">
-						<label>Error Msg</label>
-						<input type="Submit" class="dotBorder" value="Signup">
+						<label for="city">City:</label><input type="text" id="city" class="dotBorder signupInput" name="city" onkeypress="changeBorderColor(this, 1)">
+						<label for="country">Country:</label><input type="text" id="country" class="dotBorder signupInput" name="country" onkeypress="changeBorderColor(this, 1)">
+						<label for="email">Email:</label><input type="text" id="email" class="dotBorder signupInput" name="email" onkeypress="changeBorderColor(this, 1)">
+						<label for="newPassword">Password:</label><input type="password" id="newPassword" class="dotBorder signupInput" name="newPassword" onkeypress="changeBorderColor(this, 1)">
+						<label for="confirmPassword">Confirm Pwd:</label><input type="password" id="confirmPassword" class="dotBorder signupInput" name="confirmPassword" onkeypress="changeBorderColor(this, 1)">
+						<input type="Submit" class="dotBorder" value="Signup" id="submit">
 					</form>
+					<label id="signupMsg"></label>
 				</div>
 			</div>
 		</script>

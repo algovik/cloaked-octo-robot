@@ -39,6 +39,7 @@ function removeLoginMsg(){
 }
 
 function validateSignup(formVar){
+	removeSignupMessages();
 	var bool=true;
 	var formData=new Array(); //This object will contain the form data that will be passed on to the server.
 	formData["gender"]=formVar["gender"].value;
@@ -100,13 +101,54 @@ function validateSignup(formVar){
 	}
 
 	if(bool==true){
-		//console.log("Successful signup!");
-		var serverResponse=serverstub.signUp(formData);
+		var serverResponse = serverstub.signUp(formData);
+		var successBool=serverResponse["success"];
 		alert(serverResponse["message"]);
+		createSignupMessage(serverResponse["message"]);
+		if(!successBool){ // user already exists
+			changeBorderColor(formVar["email"], 2);
+		}
+		else{	//new user
+			for(i =0; i < formVar.length; i++) {
+				if(formVar[i]!=formVar["submit"])
+				formVar[i].value="";
+			}
+			formVar["gender"].value="male";
+		}
+	}
+	return false;
+}
+
+
+function createSignupMessage(message) {
+    var signupMess = document.createElement(signupMess);
+    signupMess.innerHTML=message;
+    document.getElementById("signupMsg").appendChild(signupMess);
+}
+
+function removeSignupMessages() {
+    while (document.getElementById("signupMsg").hasChildNodes()){
+		document.getElementById("signupMsg").removeChild(document.getElementById("signupMsg").childNodes[0]);
+    }
+}
+
+/*
+
+if(bool==true){
+		var serverResponse = serverstub.signIn(username, password);
+		bool=serverResponse["success"]
+		if(bool){
+			localStorage.token = serverResponse["data"]; //If login is successful, a session token is stored locally
+		} else {
+			changeBorderColor(formVar["username"], 2);
+			changeBorderColor(formVar["password"], 2);
+			document.getElementById("loginMsg").innerHTML = serverResponse["message"];
+		}
 	}
 	return bool;
 }
 
+*/
 
 function changeBorderColor(inputfield, color){
 	if(color==1){  //1 gives the standard black border color
