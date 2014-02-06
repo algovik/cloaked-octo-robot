@@ -68,6 +68,7 @@ function removeLoginMsg(){
 }
 
 function validateSignup(formVar){
+	removeAllSignupMessages();
 	var bool=true;
 	var formData=new Array(); //This object will contain the form data that will be passed on to the server.
 	formData["gender"]=formVar["gender"].value;
@@ -129,13 +130,82 @@ function validateSignup(formVar){
 	}
 
 	if(bool==true){
-		//console.log("Successful signup!");
-		var serverResponse=serverstub.signUp(formData);
-		alert(serverResponse["message"]);
+		var serverResponse = serverstub.signUp(formData);
+		var successBool=serverResponse["success"];
+
+		if(!successBool){ //if user already exists
+			changeBorderColor(formVar["email"], 2);  //change the border color to red
+			createSignupMessage(serverResponse["message"], "errormessage");
+		}
+		else{	//new user, clear the form fields
+			for(i =0; i < formVar.length; i++) {
+				if(formVar[i]!=formVar["submit"]){
+					formVar[i].value="";
+				}
+			}
+			formVar["gender"].value="male";
+			createSignupMessage(serverResponse["message"], "successmessage");
+		}
+	}
+	return false;
+}
+
+/*
+Creates error messages and success messages with id's that allows us to later on 
+identify wheter they are success or error messages (Without knowledge of what content an error message or a 
+success message contains. This can be changed on the serverside without any problem on the client)
+
+(Can be generalized to create messages for signup OR sign in.)
+*/
+function createSignupMessage(message, id) {
+    var signupMess = document.createElement(signupMess);
+    signupMess.innerHTML=message;
+    signupMess.setAttribute("id", id)
+    document.getElementById("signupMsg").appendChild(signupMess);
+}
+
+function removeSignupMessage(elementId) {
+    if(document.getElementById("signupMsg").hasChildNodes()){
+    	var message=document.getElementById("signupMsg").childNodes[0];
+    	if(message.id==elementId){
+    		document.getElementById("signupMsg").removeChild(document.getElementById("signupMsg").childNodes[0]);
+    	}
+    }
+}
+
+function removeErrorMessageAndBorder(fieldName){
+	changeBorderColor(fieldName, 1);
+	removeSignupMessage("errormessage");
+}
+
+function removeSuccessMessageAndBorder(fieldName){
+	changeBorderColor(fieldName, 1);
+	removeSignupMessage("successmessage");
+}
+
+function removeAllSignupMessages(){
+	    while (document.getElementById("signupMsg").hasChildNodes()){
+    	document.getElementById("signupMsg").removeChild(document.getElementById("signupMsg").childNodes[0]);
+    }
+}
+
+/*
+
+if(bool==true){
+		var serverResponse = serverstub.signIn(username, password);
+		bool=serverResponse["success"]
+		if(bool){
+			localStorage.token = serverResponse["data"]; //If login is successful, a session token is stored locally
+		} else {
+			changeBorderColor(formVar["username"], 2);
+			changeBorderColor(formVar["password"], 2);
+			document.getElementById("loginMsg").innerHTML = serverResponse["message"];
+		}
 	}
 	return bool;
 }
 
+*/
 
 function changeBorderColor(inputfield, color){
 	if(color==1){  //1 gives the standard black border color
