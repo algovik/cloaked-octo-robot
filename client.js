@@ -6,6 +6,13 @@ function loadView(){
 	}
 }
 
+function confirmLogout(){
+	var r=confirm("Are you sure you want to log out?");
+	if (r==true){
+		logout();
+	}
+}
+
 function logout(){
 	result = serverstub.signOut(localStorage.token);
 	localStorage.removeItem("token");

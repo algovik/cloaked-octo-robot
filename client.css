@@ -179,11 +179,12 @@ select {
 #tabs ul li#logout a {
 	background-color: #b0b0b0;
 	margin-left: 220px;
+	border-bottom: 2px solid #b0b0b0;
 }
 
 #tabs ul li.active a {
 	background-color: white;
-	border-bottom: 1px solid white;
+	border-bottom: 4px solid white;
 }
 
 #tabs ul li a:hover {
@@ -196,7 +197,7 @@ select {
 	overflow:hidden;
 	line-height:19px;
 	position: relative;
-	top: 17px;
+	top: 19px;
 	z-index: 5;
 	height: 600px;
 	overflow: hidden;
