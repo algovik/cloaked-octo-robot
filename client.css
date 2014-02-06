@@ -208,3 +208,13 @@ select {
 	width:50%;
 	margin-top:20px;
 }
+
+#personalInfo{
+	float:left;
+	clear:both;
+}
+
+#pdname {
+	font-size:1.1em;
+	font-weight:bold;
+}

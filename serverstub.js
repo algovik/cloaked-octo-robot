@@ -65,6 +65,10 @@ serverstub.postMessage = function(token, content, toEmail){
     }
 };
 
+/*
+Returns an object containing the field email, firstname, 
+familyname, gender, city and country. 
+*/
 serverstub.getUserDataByToken = function(token){
     var email = serverstub.tokenToEmail(token);
     return serverstub.getUserDataByEmail(token, email);
