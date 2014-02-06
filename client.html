@@ -51,18 +51,25 @@
 					<li id="li_home" class="active" onclick="tab('home')"><a>Home</a></li>
 					<li id="li_browse" onclick="tab('browse')"><a>Browse</a></li>
 					<li id="li_account" onclick="tab('account')"><a>Account</a></li>
-					<!-- Not fully functioning -->
 					<li id="logout" onclick="logout()"><a>Logout</a></li>
 				</ul>
 					<div id="contentArea" class="dotBorder">
 						<div id="home">
 							This is the Home view.
 						</div>
-						<div id="browse" style="display:none;">
+						<div id="browse" style="display:none">
 							This is the Browse view.
 						</div>
-						<div id="account" style="display:none;">
-							This is the Account view.
+						<div id="account" style="display:none">
+							<div id="changePasswordBox">
+								<h4>Change Password</h4>
+								<form name="changePassword" onsubmit="return changePasswordClient(this)">
+									<label for="oldPassword">Old Password:</label><input type="password" id="oldPassword" class="dotBorder">
+									<label for="newPasswordChange">New Password:</label><input type="password" id="newPasswordChange" class="dotBorder">
+									<input type="submit" value="Change Password" class="dotBorder">
+								</form>
+								<label id="lblChangePassword"></label>
+							</div>
 						</div>
 					</div
 				</div>
@@ -73,13 +80,6 @@
 		<div id="displayView"></div>
 		<script> //Script to fill the page on load.
 			window.onload = loadView;			
-			//Tests whether or not a login token exists.
-			/*localStorage.clear();
-			if(localStorage.token){
-				alert("token exist");
-			} else {
-				alert("no token");
-			}*/
 		</script>
 	</body>
 </html>

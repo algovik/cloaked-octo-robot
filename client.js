@@ -5,9 +5,21 @@ function loadView(){
 		document.getElementById("displayView").innerHTML = document.getElementById("welcomeView").innerHTML; //Else it shows the welcomeView.
 	}
 }
-//Not fully functioning
+
 function logout(){
+	result = serverstub.signOut(localStorage.token);
 	localStorage.removeItem("token");
+	location.reload();
+}
+
+function changePasswordClient(formVar){
+	var oldPassword = formVar["oldPassword"].value;
+	var newPassword = formVar["newPasswordChange"].value;
+	result = serverstub.changePassword(localStorage.token,oldPassword,newPassword);
+	document.getElementById("lblChangePassword").innerHTML = result["message"];
+	formVar["oldPassword"].value = "";
+	formVar["newPasswordChange"].value = "";
+	return false;
 }
 
 function tab(tab){
