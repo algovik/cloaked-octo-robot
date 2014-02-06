@@ -1,6 +1,7 @@
 function loadView(){
 	if(localStorage.token){
 		document.getElementById("displayView").innerHTML = document.getElementById("profileView").innerHTML; //Shows profileView when user already has a token.
+		loadPersonalData(localStorage.token);
 	} else {
 		document.getElementById("displayView").innerHTML = document.getElementById("welcomeView").innerHTML; //Else it shows the welcomeView.
 	}
@@ -42,6 +43,8 @@ function tab(tab){
 	document.getElementById("li_"+tab).setAttribute("class","active");
 }
 
+
+
 function validateLogin(formVar){
 	var bool=true;
 	var username = formVar["username"].value;
@@ -61,6 +64,7 @@ function validateLogin(formVar){
 		bool=serverResponse["success"]
 		if(bool){
 			localStorage.token = serverResponse["data"]; //If login is successful, a session token is stored locally
+
 		} else {
 			changeBorderColor(formVar["username"], 2);
 			changeBorderColor(formVar["password"], 2);
@@ -68,6 +72,14 @@ function validateLogin(formVar){
 		}
 	}
 	return bool;
+}
+
+function loadPersonalData(token){
+	var personalData = serverstub.getUserDataByToken(token)["data"];
+	document.getElementById("pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
+	var gender=personalData["gender"];
+	document.getElementById("pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
+	document.getElementById("pdemail").innerHTML=personalData["email"];
 }
 
 function removeLoginMsg(){

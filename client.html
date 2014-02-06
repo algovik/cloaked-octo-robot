@@ -56,7 +56,21 @@
 				</ul>
 					<div id="contentArea" class="dotBorder">
 						<div id="home">
-							This is the home view.
+							<div id="personalInfo" class="dotBorder">
+								<label id=pdname></label>
+								<label id=pdlocation></label>
+								<label id=pdemail></label>
+							</div>
+
+							<div id="wall">
+							</div>
+
+							<div id="postToWall">
+								<form name="wallInput" onsubmit="return sendToWall(this)">
+									<input type="text" id="wallInputField" placeholder="Share your thoughts">
+									<input type="submit" value="Send" id="submitWall">
+								</form>
+							</div>
 						</div>
 						<div id="browse" style="display:none">
 							
