@@ -19,6 +19,10 @@ h4 {
 	margin:0.2em;
 }
 
+#signupMsg {
+	font-size: 0.95em;	
+}
+
 #welcomeMain {
 	position:relative;
 	max-width:600px;
