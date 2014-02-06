@@ -17,7 +17,7 @@
 				<div id="loginBox" class="dotBorder">
 					<form name="login" onsubmit="return validateLogin(this)">
 						<label for="username">Username:</label>
-						<input type="text" id="eusernam" class="dotBorder" name="username" onkeypress="changeBorderColor(this, 1); removeLoginMsg()">
+						<input type="text" id="username" class="dotBorder" name="username" onkeypress="changeBorderColor(this, 1); removeLoginMsg()">
 						<label for="password">Password:</label>
 						<input type="password" id="password" class="dotBorder" name="password" onkeypress="changeBorderColor(this, 1); removeLoginMsg()">
 						<label id="msgLogin"></label>
@@ -64,7 +64,7 @@
 							This is the Browse view.
 						</div>
 						<div id="account" style="display:none">
-							<div id="changePasswordBox">
+							<div id="changePasswordBox" class="dotBorder">
 								<h4>Change Password</h4>
 								<form name="changePassword" onsubmit="return changePasswordClient(this)">
 									<label for="oldPassword">Old Password:</label><input type="password" id="oldPassword" class="dotBorder">

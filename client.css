@@ -200,7 +200,6 @@ select {
 	top: 19px;
 	z-index: 5;
 	height: 600px;
-	overflow: hidden;
 	background-color:white;
 }
 
