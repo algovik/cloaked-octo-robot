@@ -16,7 +16,7 @@ function changePasswordClient(formVar){
 	var oldPassword = formVar["oldPassword"].value;
 	var newPassword = formVar["newPasswordChange"].value;
 	result = serverstub.changePassword(localStorage.token,oldPassword,newPassword);
-	document.getElementById("lblChangePassword").innerHTML = result["message"];
+	document.getElementById("msgChangePassword").innerHTML = result["message"];
 	formVar["oldPassword"].value = "";
 	formVar["newPasswordChange"].value = "";
 	return false;
@@ -57,14 +57,14 @@ function validateLogin(formVar){
 		} else {
 			changeBorderColor(formVar["username"], 2);
 			changeBorderColor(formVar["password"], 2);
-			document.getElementById("loginMsg").innerHTML = serverResponse["message"];
+			document.getElementById("msgLogin").innerHTML = serverResponse["message"];
 		}
 	}
 	return bool;
 }
 
 function removeLoginMsg(){
-	document.getElementById("loginMsg").innerHTML = "";
+	document.getElementById("msgLogin").innerHTML = "";
 }
 
 function validateSignup(formVar){
