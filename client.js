@@ -80,11 +80,8 @@ function loadPersonalData(token){
 	var gender=personalData["gender"];
 	document.getElementById("pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
 	document.getElementById("pdemail").innerHTML=personalData["email"];
-
 	//load messages
-	alert("loading messages");
 	listAllMessages(token)
-	alert("messages loaded");
 }
 
 function removeLoginMsg(){
@@ -180,7 +177,6 @@ Will use the serverstub to store a message in the specified users wall storage w
 function sendToWall(formVar, toUserToken){
 	var userEmail = serverstub.tokenToEmail(toUserToken);
 	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, userEmail);
-	alert(serverResponse["message"]);
 	return serverResponse["success"];
 
 }
@@ -201,16 +197,10 @@ Called when the client wants to view all messages on their wall.
 
 function listAllMessages(userToken){
 	response = retrieveMessages(userToken);
-	alert("messages retrieved");
 	messages = response["data"];
-	alert("content of first message "+ messages[0]["content"]);
-	if(response["success"]==true){
-		alert("MEDDELANDEN FINNS");	// FÅR UT DETTA!
-	}
 
 	if(response["success"]==true){
 		for (var i=0; i < messages.length; i++){
-			alert("skall nu lägga till meddelandet: " + messages[i]["content"]);
 			addMessageToWall(messages[i]);
 		}
 		return true;
@@ -227,9 +217,7 @@ the definition of a message defined on the server-side.
 */
 function addMessageToWall(messageVar){
 	var messageElement = document.createElement("label");
-	alert("skapar en label");
     messageElement.innerHTML=messageVar["content"];
-    alert("lägger till message content som innerHTML");
     /*signupMess.setAttribute("class", "messageClass")
     alert("sätter class till messageClass");*/  //HÄR VAR PROBLEMET
     document.getElementById("wallMessages").appendChild(messageElement);
