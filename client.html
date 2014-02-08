@@ -5,7 +5,7 @@
 
 
 	<head> <title>Twidder</title>
-	<link rel='shortcut icon' type='image/x-icon' href='/favicon.ico'>
+	<link rel="icon" type='image/x-icon' href='favicon.ico'>
 		<link href="client.css" type="text/css" rel="stylesheet">
 		<script src="client.js" type="text/javascript"></script>
 		<script src="serverstub.js" type="text/javascript"></script>
@@ -48,6 +48,7 @@
 		<script type="text/view" id="profileView">
 			<div id="ProfileMain">
 				<div id="tabs">
+				<img src="img/logo.png" id="logoImg">
 				<ul>
 					<li id="li_home" class="active" onclick="tab('home')"><a>Home</a></li>
 					<li id="li_browse" onclick="tab('browse')"><a>Browse</a></li>
@@ -67,7 +68,7 @@
 
 							<div id="postToWall">
 								<form name="wallInput" onsubmit="return sendToWall(this)">
-									<input type="text" id="wallInputField" placeholder="Share your thoughts">
+									<input type="text" id="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 									<input type="submit" value="Send" id="submitWall">
 								</form>
 							</div>

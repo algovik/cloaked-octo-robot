@@ -144,7 +144,7 @@ select {
 #tabs ul {
 	padding: 0px;
 	margin: 0px;
-	margin-left: 10px;
+	margin-left: 50px;
 	list-style-type: none;
 }
 
@@ -178,7 +178,7 @@ select {
 
 #tabs ul li#logout a {
 	background-color: #b0b0b0;
-	margin-left: 220px;
+	margin-left: 200px;
 	border-bottom: 2px solid #b0b0b0;
 }
 
@@ -217,4 +217,12 @@ select {
 #pdname {
 	font-size:1.1em;
 	font-weight:bold;
+}
+
+#logoImg {
+	position:absolute;
+	height:26px;
+	width:26px;
+	left:20px;
+	top:20px;
 }
