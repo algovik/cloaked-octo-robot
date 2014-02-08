@@ -59,6 +59,7 @@ serverstub.postMessage = function(token, content, toEmail){
             return {"success": true, "message": "Message posted"};
         } else {
             return {"success": false, "message": "No such user."};
+
         }
     } else {
         return {"success": false, "message": "You are not signed in."};

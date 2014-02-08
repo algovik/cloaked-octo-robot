@@ -80,6 +80,8 @@ function loadPersonalData(token){
 	var gender=personalData["gender"];
 	document.getElementById("pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
 	document.getElementById("pdemail").innerHTML=personalData["email"];
+	//load messages
+	listAllMessages(token)
 }
 
 function removeLoginMsg(){
@@ -167,6 +169,58 @@ function validateSignup(formVar){
 		}
 	}
 	return false;
+}
+
+/*
+Will use the serverstub to store a message in the specified users wall storage with the attributes fromUser and message.
+*/
+function sendToWall(formVar, toUserToken){
+	var userEmail = serverstub.tokenToEmail(toUserToken);
+	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, userEmail);
+	return serverResponse["success"];
+
+}
+
+/*
+Retrieves the users messages from the 'server'
+*/
+function retrieveMessages(userToken){
+	serverResponse = serverstub.getUserMessagesByToken(userToken);
+	// messages = serverResponse["data"];
+
+	return serverResponse;
+}
+
+/*
+Called when the client wants to view all messages on their wall.
+*/
+
+function listAllMessages(userToken){
+	response = retrieveMessages(userToken);
+	messages = response["data"];
+
+	if(response["success"]==true){
+		for (var i=0; i < messages.length; i++){
+			addMessageToWall(messages[i]);
+		}
+		return true;
+	}
+	else{
+		return false;
+	}
+
+}
+
+/*
+Adds/appends a single message to the wall where "var message = {"writer": fromEmail, "content": content};" is
+the definition of a message defined on the server-side.
+*/
+function addMessageToWall(messageVar){
+	var messageElement = document.createElement("label");
+    messageElement.innerHTML=messageVar["content"];
+    /*signupMess.setAttribute("class", "messageClass")
+    alert("sätter class till messageClass");*/  //HÄR VAR PROBLEMET
+    document.getElementById("wallMessages").appendChild(messageElement);
 }
 
 /*

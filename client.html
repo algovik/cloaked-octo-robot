@@ -63,14 +63,17 @@
 								<label id=pdemail></label>
 							</div>
 
-							<div id="wall">
+							<div id="postToWall">
+								<form name="wallInput" onsubmit="return sendToWall(this, localStorage.token)">
+									<input type="text" name="wallInputField" id="wallInputField" placeholder="Share your thoughts">
+									<input type="Submit" value="Post" id="submitWall">
+								</form>
 							</div>
 
-							<div id="postToWall">
-								<form name="wallInput" onsubmit="return sendToWall(this)">
-									<input type="text" id="wallInputField" class="dotBorder" placeholder="Share your thoughts">
-									<input type="submit" value="Send" id="submitWall">
-								</form>
+
+							<div id="wall">
+								<div id="wallMessages">
+								</div>
 							</div>
 						</div>
 						<div id="browse" style="display:none">
