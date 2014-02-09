@@ -225,9 +225,13 @@ the definition of a message defined on the server-side.
 */
 function addMessageToWall(messageVar){
 	var messageElement = document.createElement("label");
-    messageElement.innerHTML="<span class='msgPoster'>"+messageVar["writer"]+"</span>: "+messageVar["content"];
-    /*signupMess.setAttribute("class", "messageClass")
-    alert("sätter class till messageClass");*/  //HÄR VAR PROBLEMET
+	var userEmail = serverstub.tokenToEmail(localStorage.token);
+	if(messageVar["writer"]==userEmail){
+		messageElement.innerHTML="<span class='msgPoster'>Me</span>: "+messageVar["content"];
+	}
+	else{
+		messageElement.innerHTML="<span class='msgPoster'>"+messageVar["writer"]+"</span>: "+messageVar["content"];
+	}
     document.getElementById("wallMessages").appendChild(messageElement);
 }
 
