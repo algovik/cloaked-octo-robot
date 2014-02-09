@@ -10,6 +10,7 @@
 		<script src="client.js" type="text/javascript"></script>
 		<script src="serverstub.js" type="text/javascript"></script>
 		<script type="text/view" id="welcomeView">
+			<img src="img/logo.png" id="welcomeLogo" class="flipImg">
 			<div id="welcomeMain">
 				<div id="logoBox" class="dotBorder">
 					<img src="img/wimage.png">
@@ -62,15 +63,17 @@
 								<label id=pdlocation></label>
 								<label id=pdemail></label>
 							</div>
-							<div id="postToWall">
-								<form name="wallInput" onsubmit="return sendToWall(this, localStorage.token)">
-									<input type="text" name="wallInputField" id="wallInputField" placeholder="Share your thoughts">
-									<input type="Submit" value="Post" id="submitWall">
-								</form>
-							</div>
-							<div id="wall">
-								<button id="refresh" onclick="refreshWall(localStorage.token)"><img src="img/refreshbutton.png"></button>
-								<div id="wallMessages">
+							<div id="wallContainer">
+								<div id="postToWall">
+									<form name="wallInput" onsubmit="return sendToWall(this, localStorage.token)">
+										<input type="text" id="wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
+										<input type="Submit" id="submitWall" class="dotBorder" value="Post">
+									</form>
+									<button id="refresh" class="dotBorder" onclick="refreshWall(localStorage.token)"><img src="img/refreshbutton.png"></button>
+								</div>
+								<div id="wall">
+									<div id="wallMessages">
+									</div>
 								</div>
 							</div>
 						</div>

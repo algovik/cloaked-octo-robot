@@ -18,6 +18,23 @@ h4 {
 	margin:0.2em;
 }
 
+#welcomeLogo {
+	position:absolute;
+	top:39px;
+	right:340px;
+	height:70px;
+	width:70px;
+}
+
+.flipImg {
+	-moz-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+	filter: FlipH;
+	-ms-filter: "FlipH";	
+}
+
 .centerText {
 	text-align:center;
 }
@@ -214,8 +231,20 @@ input[type="Submit"]{
 }
 
 #personalInfo{
+	width:30%;
+	height:100px;
 	float:left;
 	clear:both;
+	margin-top:25px;
+	margin-left:20px;
+	padding-top:10px;
+	padding-left:5px;
+}
+
+#personalInfo label {
+	width:auto;
+	height:1.5em;
+	margin:0px;
 }
 
 #pdname {
@@ -230,14 +259,63 @@ input[type="Submit"]{
 	left;
 }
 
-#wallMessages{
-	overflow: auto;
+#wallContainer {
+	float:right;
+	margin-top:23px;
+	width:65%;
 }
 
+#postToWall {
+	height:20px;
+	clear:both;
+}
+
+#postToWall form {
+	margin-bottom:0px;
+}
+
+#postToWall input {
+	float:left;
+	width:70%;
+}
+
+#postToWall input[type="Submit"]{
+	width:auto;
+	margin-top:0px;
+}
+
+#wall {
+	float:left;
+	width:100%;
+	height:92.5%;
+	overflow:auto;
+}
+
+#wallMessages{
+	float:left;
+	width:100%;
+}
+
+#wallMessages label {
+	width:auto;
+	height:auto;
+	line-height: 1.4em;
 }
 
 .msgPoster{
 	font-weight: bold;
+}
+
+#refresh {
+	float:left;
+	width:26px;
+	height:20px;
+	margin-left:10px;
+}
+
+#refresh img {
+	height:100%;
+	width:100%;
 }
 
 /*.refreshButton {
