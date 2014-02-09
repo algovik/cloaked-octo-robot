@@ -43,7 +43,16 @@ function tab(tab){
 	document.getElementById("li_"+tab).setAttribute("class","active");
 }
 
-
+function searchUser(formVar){
+	var email = formVar["searchEmailField"];
+	var result = serverstub.getUserDataByEmail(localStorage.token,formVar["searchEmailField"].value);
+	if(result["success"]){
+		alert(result["message"]);
+	} else {
+		document.getElementById("browseResult").innerHTML = result["message"];
+	}
+	return false;
+}
 
 function validateLogin(formVar){
 	var bool=true;
@@ -208,7 +217,6 @@ function listAllMessages(userToken){
 	else{
 		return false;
 	}
-
 }
 
 /*

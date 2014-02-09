@@ -115,7 +115,8 @@ label {
 	clear:left;
 }
 
-input {
+#loginBox input,
+#signupBox input {
 	float:right;
 	margin-top:5px;
 	margin-right:5px;
@@ -126,7 +127,7 @@ input[type="Submit"]{
 	width:auto;
 }
 
-select {
+#signupBox select {
 	float:right;
 	margin-top:5px;
 	margin-right:5px;
@@ -195,7 +196,7 @@ select {
 }
 
 #tabs #ContentArea {
-	padding: 15 15px;
+	/*padding: 15 15px;*/
 	clear:both;
 	overflow:hidden;
 	line-height:19px;
@@ -209,7 +210,7 @@ select {
 #changePasswordBox {
 	float:left;
 	width:50%;
-	margin-top:20px;
+	margin: 25 20px;
 }
 
 #personalInfo{
@@ -231,6 +232,7 @@ select {
 
 #wallMessages{
 	overflow: auto;
+}
 
 }
 
@@ -252,4 +254,23 @@ select {
 .refreshButton img {
 	height:95%;
 	width:95%;
-}*/
+} */
+
+#browseSearch {
+	padding: 15 15px;
+	width:100%;
+	height:15%;
+	border-bottom: 1px dotted black;
+}
+
+#browseSearch input {
+	width:250px;
+}
+
+#browseSearch input[type="Submit"] {
+	width:auto;
+}
+
+#browseResult {
+	padding:15 15px;
+}
