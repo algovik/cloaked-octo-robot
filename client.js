@@ -217,7 +217,7 @@ the definition of a message defined on the server-side.
 */
 function addMessageToWall(messageVar){
 	var messageElement = document.createElement("label");
-    messageElement.innerHTML=messageVar["content"];
+    messageElement.innerHTML="<span class='msgPoster'>"+messageVar["writer"]+"</span>: "+messageVar["content"];
     /*signupMess.setAttribute("class", "messageClass")
     alert("sätter class till messageClass");*/  //HÄR VAR PROBLEMET
     document.getElementById("wallMessages").appendChild(messageElement);

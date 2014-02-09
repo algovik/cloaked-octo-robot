@@ -232,6 +232,12 @@ select {
 #wallMessages{
 	overflow: auto;
 
+}
+
+.msgPoster{
+	font-weight: bold;
+}
+
 /*.refreshButton {
 	float:right;
 	height:25px;
