@@ -81,7 +81,7 @@ function loadPersonalData(token){
 	document.getElementById("pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
 	document.getElementById("pdemail").innerHTML=personalData["email"];
 	//load messages
-	listAllMessages(token)
+	listAllMessages(token);
 }
 
 function removeLoginMsg(){
@@ -177,7 +177,7 @@ Will use the serverstub to store a message in the specified users wall storage w
 function sendToWall(formVar, toUserToken){
 	var userEmail = serverstub.tokenToEmail(toUserToken);
 	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, userEmail);
-	return serverResponse["success"];
+	return false; //serverResponse["success"];
 
 }
 
@@ -224,6 +224,22 @@ function addMessageToWall(messageVar){
 }
 
 /*
+Clears the wall of messages. Used for refreshin the wall.
+*/
+function clearWall(){
+	 while (document.getElementById("wallMessages").hasChildNodes()){
+    	document.getElementById("wallMessages").removeChild(document.getElementById("wallMessages").childNodes[0]);
+    }
+}
+
+function refreshWall(userToken){
+	clearWall();
+	listAllMessages(userToken);
+	alert("SUGA SNOPP");
+	return true;
+}
+
+/*
 Creates error messages and success messages with id's that allows us to later on 
 identify wheter they are success or error messages (Without knowledge of what content an error message or a 
 success message contains. This can be changed on the serverside without any problem on the client)
@@ -262,24 +278,6 @@ function removeAllSignupMessages(){
     }
 }
 
-/*
-
-if(bool==true){
-		var serverResponse = serverstub.signIn(username, password);
-		bool=serverResponse["success"]
-		if(bool){
-			localStorage.token = serverResponse["data"]; //If login is successful, a session token is stored locally
-		} else {
-			changeBorderColor(formVar["username"], 2);
-			changeBorderColor(formVar["password"], 2);
-			document.getElementById("loginMsg").innerHTML = serverResponse["message"];
-		}
-	}
-	return bool;
-}
-
-*/
-
 function changeBorderColor(inputfield, color){
 	if(color==1){  //1 gives the standard black border color
 		inputfield.className="dotBorder";
@@ -289,9 +287,3 @@ function changeBorderColor(inputfield, color){
 }
 
 
-// displayView = function(){
-//    // the code required to display a view.
-// };
-// document.onload = function(){
-//     //code that is executed as the page is loaded.
-// };

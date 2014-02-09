@@ -225,3 +225,7 @@ select {
 	width:50px;
 	left;
 }
+
+#wallMessages{
+	overflow: auto;
+}
