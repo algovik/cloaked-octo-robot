@@ -25,7 +25,7 @@
 					</form>
 				</div>
 				<div id="signupBox" class="dotBorder">
-					<h4>Sign Up Here!</h4>
+					<h4 class="centerText">Sign Up Here!</h4>
 					<form name="signup" onsubmit="return validateSignup(this)">
 						<label for="firstName">First Name:</label><input type="text" id="firstName" class="dotBorder signupInput" name="firstName" onkeypress="removeSuccessMessageAndBorder(this)">
 						<label for="familyName">Family Name:</label><input type="text" id="familyName" class="dotBorder signupInput" name="familyName" onkeypress="changeBorderColor(this, 1)">
@@ -67,9 +67,9 @@
 								<form name="wallInput" onsubmit="return sendToWall(this, localStorage.token)">
 									<input type="text" name="wallInputField" id="wallInputField" placeholder="Share your thoughts">
 									<input type="Submit" value="Post" id="submitWall">
+									<div class="refreshbutton dotBorder"><img src="img/refreshbutton.png">
 								</form>
 							</div>
-
 
 							<div id="wall">
 								<div id="wallMessages">
@@ -77,9 +77,9 @@
 							</div>
 						</div>
 						<div id="browse" style="display:none">
-							
-
-							This is the Browse view.
+							<div id="browseSearch">
+								<h4>Search for friends by entering an email address below.</h4>
+							</div>
 						</div>
 						<div id="account" style="display:none">
 							<div id="changePasswordBox" class="dotBorder">
