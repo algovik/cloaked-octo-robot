@@ -235,7 +235,6 @@ function clearWall(){
 function refreshWall(userToken){
 	clearWall();
 	listAllMessages(userToken);
-	alert("SUGA SNOPP");
 	return true;
 }
 
