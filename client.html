@@ -66,10 +66,10 @@
 								<form name="wallInput" onsubmit="return sendToWall(this, localStorage.token)">
 									<input type="text" name="wallInputField" id="wallInputField" placeholder="Share your thoughts">
 									<input type="Submit" value="Post" id="submitWall">
-									<div class="refreshbutton dotBorder"><img src="img/refreshbutton.png"></div>
 								</form>
 							</div>
 							<div id="wall">
+								<button id="refresh" onclick="refreshWall(localStorage.token)"><img src="img/refreshbutton.png"></button>
 								<div id="wallMessages">
 								</div>
 							</div>
