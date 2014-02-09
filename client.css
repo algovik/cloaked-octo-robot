@@ -286,8 +286,9 @@ input[type="Submit"]{
 
 #wall {
 	float:left;
-	width:100%;
-	height:92.5%;
+	width:97%;
+	height:88%;
+	margin-top:5px;
 	overflow:auto;
 }
 

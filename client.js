@@ -83,6 +83,11 @@ function validateLogin(formVar){
 	return bool;
 }
 
+function getNameByEmail(email){
+	var userData = serverstub.getUserDataByEmail(localStorage.token,email)["data"];
+	return userData["firstname"] + " " + userData["familyname"];
+}
+
 function loadPersonalData(token){
 	var personalData = serverstub.getUserDataByToken(token)["data"];
 	document.getElementById("pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
@@ -230,7 +235,7 @@ function addMessageToWall(messageVar){
 		messageElement.innerHTML="<span class='msgPoster'>Me</span>: "+messageVar["content"];
 	}
 	else{
-		messageElement.innerHTML="<span class='msgPoster'>"+messageVar["writer"]+"</span>: "+messageVar["content"];
+		messageElement.innerHTML="<span class='msgPoster'>"+getNameByEmail(messageVar["writer"])+"</span>: "+messageVar["content"];
 	}
     document.getElementById("wallMessages").appendChild(messageElement);
 }
