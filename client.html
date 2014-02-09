@@ -62,15 +62,13 @@
 								<label id=pdlocation></label>
 								<label id=pdemail></label>
 							</div>
-
 							<div id="postToWall">
 								<form name="wallInput" onsubmit="return sendToWall(this, localStorage.token)">
 									<input type="text" name="wallInputField" id="wallInputField" placeholder="Share your thoughts">
 									<input type="Submit" value="Post" id="submitWall">
-									<div class="refreshbutton dotBorder"><img src="img/refreshbutton.png">
+									<div class="refreshbutton dotBorder"><img src="img/refreshbutton.png"></div>
 								</form>
 							</div>
-
 							<div id="wall">
 								<div id="wallMessages">
 								</div>
@@ -79,6 +77,12 @@
 						<div id="browse" style="display:none">
 							<div id="browseSearch">
 								<h4>Search for friends by entering an email address below.</h4>
+								<form name="searchEmail" onsubmit="return searchUser(this)">
+									<input type="text" id="searchEmailField" class="dotBorder" name="searchEmailField">
+									<input type="Submit" id="searchEmailButton" class="dotBorder" value="Search">
+								</form>
+							</div>
+							<div id="browseResult">
 							</div>
 						</div>
 						<div id="account" style="display:none">
