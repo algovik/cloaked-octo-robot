@@ -15,8 +15,11 @@ html, body {
 h4 {
 	font-size:1.2em;
 	font-weight:bolder;
-	text-align:center;
 	margin:0.2em;
+}
+
+.centerText {
+	text-align:center;
 }
 
 #account h4 {
@@ -228,4 +231,19 @@ select {
 
 #wallMessages{
 	overflow: auto;
+
+.refreshButton {
+	float:right;
+	height:25px;
+	width:25px;
+}
+
+.refreshButton:hover {
+	/*background-color: #f0f0f0;*/
+	border-style:solid;
+}
+
+.refreshButton img {
+	height:95%;
+	width:95%;
 }

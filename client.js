@@ -177,7 +177,7 @@ Will use the serverstub to store a message in the specified users wall storage w
 function sendToWall(formVar, toUserToken){
 	var userEmail = serverstub.tokenToEmail(toUserToken);
 	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, userEmail);
-	return false; //serverResponse["success"];
+	return serverResponse["success"];
 
 }
 
