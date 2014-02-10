@@ -1,7 +1,8 @@
 function loadView(){
 	if(localStorage.token){
 		document.getElementById("displayView").innerHTML = document.getElementById("profileView").innerHTML; //Shows profileView when user already has a token.
-		loadPersonalData(localStorage.token);
+		var email=serverstub.tokenToEmail(localStorage.token);
+		loadPersonalData(email, true);
 	} else {
 		document.getElementById("displayView").innerHTML = document.getElementById("welcomeView").innerHTML; //Else it shows the welcomeView.
 	}
@@ -44,12 +45,12 @@ function tab(tab){
 }
 
 function searchUser(formVar){
-	var email = formVar["searchEmailField"];
-	var result = serverstub.getUserDataByEmail(localStorage.token,formVar["searchEmailField"].value);
+	var email = formVar["searchEmailField"].value;
+	var result = serverstub.getUserDataByEmail(localStorage.token,email);
 	if(result["success"]){
-		alert(result["message"]);
+		loadPersonalData(email, false);
 	} else {
-		document.getElementById("browseResult").innerHTML = result["message"];
+		document.getElementById("browseResultMessages").innerHTML = result["message"];
 	}
 	return false;
 }
@@ -88,14 +89,24 @@ function getNameByEmail(email){
 	return userData["firstname"] + " " + userData["familyname"];
 }
 
-function loadPersonalData(token){
-	var personalData = serverstub.getUserDataByToken(token)["data"];
-	document.getElementById("pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
-	var gender=personalData["gender"];
-	document.getElementById("pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
-	document.getElementById("pdemail").innerHTML=personalData["email"];
-	//load messages
-	listAllMessages(token);
+function loadPersonalData(email, isCurrUser){
+	var personalData=null;
+	var token = localStorage.token;
+	var prefix="";
+	if(isCurrUser){
+		personalData = serverstub.getUserDataByToken(token)["data"];
+		prefix = "";
+	}
+	else{
+		personalData = serverstub.getUserDataByEmail(token, email)["data"];
+		prefix = "browse_";
+	}
+	
+	document.getElementById(prefix+"pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
+	document.getElementById(prefix+"pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
+	document.getElementById(prefix+"pdemail").innerHTML=personalData["email"];
+
+	listAllMessages(email, isCurrUser);
 }
 
 function removeLoginMsg(){
@@ -198,8 +209,9 @@ function sendToWall(formVar, toUserToken){
 /*
 Retrieves the users messages from the 'server'
 */
-function retrieveMessages(userToken){
-	serverResponse = serverstub.getUserMessagesByToken(userToken);
+function retrieveMessages(email){
+	var userToken = localStorage.token;
+	serverResponse = serverstub.getUserMessagesByToken(userToken, email);
 	// messages = serverResponse["data"];
 
 	return serverResponse;
@@ -209,13 +221,13 @@ function retrieveMessages(userToken){
 Called when the client wants to view all messages on their wall.
 */
 
-function listAllMessages(userToken){
-	response = retrieveMessages(userToken);
+function listAllMessages(email, isCurrUser){
+	response = retrieveMessages(email);
 	messages = response["data"];
 
 	if(response["success"]==true){
 		for (var i=0; i < messages.length; i++){
-			addMessageToWall(messages[i]);
+			addMessageToWall(messages[i], isCurrUser);
 		}
 		return true;
 	}
@@ -228,16 +240,23 @@ function listAllMessages(userToken){
 Adds/appends a single message to the wall where "var message = {"writer": fromEmail, "content": content};" is
 the definition of a message defined on the server-side.
 */
-function addMessageToWall(messageVar){
+function addMessageToWall(messageVar, isCurrUser){
 	var messageElement = document.createElement("label");
 	var userEmail = serverstub.tokenToEmail(localStorage.token);
+	var prefix="";
+
 	if(messageVar["writer"]==userEmail){
 		messageElement.innerHTML="<span class='msgPoster'>Me</span>: "+messageVar["content"];
 	}
 	else{
 		messageElement.innerHTML="<span class='msgPoster'>"+getNameByEmail(messageVar["writer"])+"</span>: "+messageVar["content"];
 	}
-    document.getElementById("wallMessages").appendChild(messageElement);
+
+	if(!isCurrUser){
+		prefix="browse_";
+	}
+
+    document.getElementById(prefix+"wallMessages").appendChild(messageElement);
 }
 
 /*
@@ -301,5 +320,6 @@ function changeBorderColor(inputfield, color){
 		inputfield.className="invalidEntry";
 	}
 }
+
 
 
