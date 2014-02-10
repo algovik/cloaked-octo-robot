@@ -1,7 +1,8 @@
 function loadView(){
 	if(localStorage.token){
 		document.getElementById("displayView").innerHTML = document.getElementById("profileView").innerHTML; //Shows profileView when user already has a token.
-		loadPersonalData(localStorage.token);
+		var email=serverstub.tokenToEmail(localStorage.token);
+		loadPersonalData(email, true);
 	} else {
 		document.getElementById("displayView").innerHTML = document.getElementById("welcomeView").innerHTML; //Else it shows the welcomeView.
 	}
@@ -44,14 +45,32 @@ function tab(tab){
 }
 
 function searchUser(formVar){
-	var email = formVar["searchEmailField"];
-	var result = serverstub.getUserDataByEmail(localStorage.token,formVar["searchEmailField"].value);
+	var email = formVar["searchEmailField"].value;
+	var result = serverstub.getUserDataByEmail(localStorage.token,email);
+	clearBrowse();
 	if(result["success"]){
-		alert(result["message"]);
+		loadPersonalData(email, false);
 	} else {
-		document.getElementById("browseResult").innerHTML = result["message"];
+		document.getElementById("browseResultMessages").innerHTML = result["message"];
 	}
 	return false;
+}
+
+function clearBrowse(){
+	clearWall(false);
+	clearPersonalData(false);
+
+}
+
+function clearPersonalData(isCurrUser){
+	var prefix="";
+	if(!isCurrUser){
+		prefix="browse_";
+	}
+
+	document.getElementById(prefix+"pdname").innerHTML="";
+	document.getElementById(prefix+"pdlocation").innerHTML="";
+	document.getElementById(prefix+"pdemail").innerHTML="";
 }
 
 function validateLogin(formVar){
@@ -88,14 +107,24 @@ function getNameByEmail(email){
 	return userData["firstname"] + " " + userData["familyname"];
 }
 
-function loadPersonalData(token){
-	var personalData = serverstub.getUserDataByToken(token)["data"];
-	document.getElementById("pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
-	var gender=personalData["gender"];
-	document.getElementById("pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
-	document.getElementById("pdemail").innerHTML=personalData["email"];
-	//load messages
-	listAllMessages(token);
+function loadPersonalData(email, isCurrUser){
+	var personalData=null;
+	var token = localStorage.token;
+	var prefix="";
+	if(isCurrUser){
+		personalData = serverstub.getUserDataByToken(token)["data"];
+		prefix = "";
+	}
+	else{
+		personalData = serverstub.getUserDataByEmail(token, email)["data"];
+		prefix = "browse_";
+	}
+	
+	document.getElementById(prefix+"pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
+	document.getElementById(prefix+"pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
+	document.getElementById(prefix+"pdemail").innerHTML=personalData["email"];
+
+	listAllMessages(email, isCurrUser);
 }
 
 function removeLoginMsg(){
@@ -188,9 +217,9 @@ function validateSignup(formVar){
 /*
 Will use the serverstub to store a message in the specified users wall storage with the attributes fromUser and message.
 */
-function sendToWall(formVar, toUserToken){
-	var userEmail = serverstub.tokenToEmail(toUserToken);
-	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, userEmail);
+function sendToWall(formVar, toUserEmail){
+	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, toUserEmail);
+	alert(serverResponse["success"]);
 	return serverResponse["success"];
 
 }
@@ -198,8 +227,9 @@ function sendToWall(formVar, toUserToken){
 /*
 Retrieves the users messages from the 'server'
 */
-function retrieveMessages(userToken){
-	serverResponse = serverstub.getUserMessagesByToken(userToken);
+function retrieveMessages(email){
+	var userToken = localStorage.token;
+	serverResponse = serverstub.getUserMessagesByEmail(userToken, email);
 	// messages = serverResponse["data"];
 
 	return serverResponse;
@@ -209,13 +239,13 @@ function retrieveMessages(userToken){
 Called when the client wants to view all messages on their wall.
 */
 
-function listAllMessages(userToken){
-	response = retrieveMessages(userToken);
+function listAllMessages(email, isCurrUser){
+	response = retrieveMessages(email);
 	messages = response["data"];
 
 	if(response["success"]==true){
 		for (var i=0; i < messages.length; i++){
-			addMessageToWall(messages[i]);
+			addMessageToWall(messages[i], isCurrUser);
 		}
 		return true;
 	}
@@ -228,30 +258,42 @@ function listAllMessages(userToken){
 Adds/appends a single message to the wall where "var message = {"writer": fromEmail, "content": content};" is
 the definition of a message defined on the server-side.
 */
-function addMessageToWall(messageVar){
+function addMessageToWall(messageVar, isCurrUser){
 	var messageElement = document.createElement("label");
 	var userEmail = serverstub.tokenToEmail(localStorage.token);
+	var prefix="";
+
 	if(messageVar["writer"]==userEmail){
 		messageElement.innerHTML="<span class='msgPoster'>Me</span>: "+messageVar["content"];
 	}
 	else{
 		messageElement.innerHTML="<span class='msgPoster'>"+getNameByEmail(messageVar["writer"])+"</span>: "+messageVar["content"];
 	}
-    document.getElementById("wallMessages").appendChild(messageElement);
+
+	if(!isCurrUser){
+		prefix="browse_";
+	}
+
+    document.getElementById(prefix+"wallMessages").appendChild(messageElement);
 }
 
 /*
 Clears the wall of messages. Used for refreshin the wall.
 */
-function clearWall(){
-	 while (document.getElementById("wallMessages").hasChildNodes()){
-    	document.getElementById("wallMessages").removeChild(document.getElementById("wallMessages").childNodes[0]);
+function clearWall(isCurrUser){
+	var prefix="";
+	if(!isCurrUser){
+		prefix="browse_";
+	}
+	 while (document.getElementById(prefix+"wallMessages").hasChildNodes()){
+    	document.getElementById(prefix+"wallMessages").removeChild(document.getElementById(prefix+"wallMessages").childNodes[0]);
     }
 }
 
 function refreshWall(userToken){
-	clearWall();
-	listAllMessages(userToken);
+	var email = serverstub.tokenToEmail(localStorage.tokenToEmail);
+	clearWall(true);
+	listAllMessages(email, true);
 	return true;
 }
 
@@ -301,5 +343,6 @@ function changeBorderColor(inputfield, color){
 		inputfield.className="invalidEntry";
 	}
 }
+
 
 
