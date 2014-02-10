@@ -47,12 +47,18 @@ function tab(tab){
 function searchUser(formVar){
 	var email = formVar["searchEmailField"].value;
 	var result = serverstub.getUserDataByEmail(localStorage.token,email);
+	clearBrowse();
 	if(result["success"]){
 		loadPersonalData(email, false);
 	} else {
 		document.getElementById("browseResultMessages").innerHTML = result["message"];
 	}
 	return false;
+}
+
+function clearBrowse(){
+	clearWall(false);
+
 }
 
 function validateLogin(formVar){
@@ -211,7 +217,7 @@ Retrieves the users messages from the 'server'
 */
 function retrieveMessages(email){
 	var userToken = localStorage.token;
-	serverResponse = serverstub.getUserMessagesByToken(userToken, email);
+	serverResponse = serverstub.getUserMessagesByEmail(userToken, email);
 	// messages = serverResponse["data"];
 
 	return serverResponse;
@@ -262,15 +268,20 @@ function addMessageToWall(messageVar, isCurrUser){
 /*
 Clears the wall of messages. Used for refreshin the wall.
 */
-function clearWall(){
-	 while (document.getElementById("wallMessages").hasChildNodes()){
-    	document.getElementById("wallMessages").removeChild(document.getElementById("wallMessages").childNodes[0]);
+function clearWall(isCurrUser){
+	var prefix="";
+	if(!isCurrUser){
+		prefix="browse_";
+	}
+	 while (document.getElementById(prefix+"wallMessages").hasChildNodes()){
+    	document.getElementById(prefix+"wallMessages").removeChild(document.getElementById(prefix+"wallMessages").childNodes[0]);
     }
 }
 
 function refreshWall(userToken){
-	clearWall();
-	listAllMessages(userToken);
+	var email = serverstub.tokenToEmail(localStorage.tokenToEmail);
+	clearWall(true);
+	listAllMessages(email, true);
 	return true;
 }
 
