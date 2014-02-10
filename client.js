@@ -58,7 +58,19 @@ function searchUser(formVar){
 
 function clearBrowse(){
 	clearWall(false);
+	clearPersonalData(false);
 
+}
+
+function clearPersonalData(isCurrUser){
+	var prefix="";
+	if(!isCurrUser){
+		prefix="browse_";
+	}
+
+	document.getElementById(prefix+"pdname").innerHTML="";
+	document.getElementById(prefix+"pdlocation").innerHTML="";
+	document.getElementById(prefix+"pdemail").innerHTML="";
 }
 
 function validateLogin(formVar){
@@ -205,9 +217,9 @@ function validateSignup(formVar){
 /*
 Will use the serverstub to store a message in the specified users wall storage with the attributes fromUser and message.
 */
-function sendToWall(formVar, toUserToken){
-	var userEmail = serverstub.tokenToEmail(toUserToken);
-	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, userEmail);
+function sendToWall(formVar, toUserEmail){
+	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, toUserEmail);
+	alert(serverResponse["success"]);
 	return serverResponse["success"];
 
 }

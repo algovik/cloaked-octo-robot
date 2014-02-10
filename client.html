@@ -67,7 +67,7 @@
 							</div>
 							<div id="wallContainer">
 								<div id="postToWall">
-									<form name="wallInput" onsubmit="return sendToWall(this, localStorage.token)">
+									<form name="wallInput" onsubmit="return sendToWall(this, serverstub.tokenToEmail(localStorage.token))">
 										<input type="text" id="wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 										<input type="Submit" id="submitWall" class="dotBorder" value="Post">
 									</form>
@@ -104,7 +104,7 @@
 
 								<div id="browse_wallContainer">
 									<div id="browse_postToWall">
-										<form name="wallInput" onsubmit="return sendToWall(this, localStorage.token)">
+										<form name="browse_wallInput" onsubmit="return sendToWall(this, document.getElementById("browse_pdemail").value)">
 											<input type="text" id="browse_wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 											<input type="Submit" id="browse_submitWall" class="dotBorder" value="Post">
 										</form>
