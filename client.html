@@ -60,21 +60,21 @@
 
 						<!-- HOME TAB -->
 						<div id="home">
-							<div id="personalInfo" class="dotBorder">
-								<label id="pdname"></label>
+							<div id="personalInfo" class="dotBorder personalInfo">
+								<label id="pdname" class="pdname"></label>
 								<label id="pdlocation"></label>
 								<label id="pdemail"></label>
 							</div>
-							<div id="wallContainer">
-								<div id="postToWall">
+							<div id="wallContainer" class="wallContainer">
+								<div id="postToWall" class="postToWall">
 									<form name="wallInput" onsubmit="return sendToWall(this, serverstub.tokenToEmail(localStorage.token))">
 										<input type="text" id="wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 										<input type="Submit" id="submitWall" class="dotBorder" value="Post">
 									</form>
-									<button id="refresh" class="dotBorder" onclick="refreshWall(localStorage.token)"><img src="img/refreshbutton.png"></button>
+									<button id="refresh" class="dotBorder refresh" onclick="refreshWall(localStorage.token)"><img src="img/refreshbutton.png"></button>
 								</div>
-								<div id="wall" class="dotBorder">
-									<div id="wallMessages">
+								<div id="wall" class="dotBorder wall">
+									<div id="wallMessages" class="wallMessages">
 									</div>
 								</div>
 							</div>
@@ -91,32 +91,30 @@
 							</div>
 
 								<!-- the browsed user page -->
-							<div id="browseResult">
+							<div id="browseResult" style="display:none">
+							<!-- OBS! Display:none -->
 								<div id="browseResultMessages">
 								</div>
-
-
-								<div id="browse_personalInfo" class="dotBorder">
-									<label id="browse_pdname"></label>
+								<div id="browse_personalInfo" class="dotBorder personalInfo">
+									<label id="browse_pdname" class="pdname"></label>
 									<label id="browse_pdlocation"></label>
 									<label id="browse_pdemail"></label>
 								</div>
 
-								<div id="browse_wallContainer">
-									<div id="browse_postToWall">
+								<div id="browse_wallContainer" class="wallContainer">
+									<div id="browse_postToWall" class="postToWall">
 										<form name="browse_wallInput" onsubmit="return sendToWall(this, document.getElementById("browse_pdemail").value)">
 											<input type="text" id="browse_wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 											<input type="Submit" id="browse_submitWall" class="dotBorder" value="Post">
 										</form>
-										<button id="browse_refresh" class="dotBorder" /*onclick="refreshWall(localStorage.token)"*/><img src="img/refreshbutton.png"></button>
+										<button id="browse_refresh" class="dotBorder refresh" /*onclick="refreshWall(localStorage.token)"*/><img src="img/refreshbutton.png"></button>
 									</div>
-									<div id="browse_wall" class="dotBorder">
-										<div id="browse_wallMessages">
+									<div id="browse_wall" class="dotBorder wall">
+										<div id="browse_wallMessages" class="wallMessages"></div>
 									</div>
 								</div>
 							</div>
 						</div>
-
 
 						<!-- ACCOUNT TAB -->
 						<div id="account" style="display:none">
