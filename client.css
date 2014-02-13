@@ -18,6 +18,12 @@ h4 {
 	margin:0.2em;
 }
 
+a,
+button,
+input[type="Submit"] {
+	cursor: pointer; cursor: hand;
+}
+
 #welcomeLogo {
 	position:absolute;
 	top:39px;
@@ -230,7 +236,7 @@ input[type="Submit"]{
 	margin: 25 20px;
 }
 
-#personalInfo{
+.personalInfo{
 	width:30%;
 	height:100px;
 	float:left;
@@ -241,13 +247,13 @@ input[type="Submit"]{
 	padding-left:5px;
 }
 
-#personalInfo label {
+.personalInfo label {
 	width:auto;
 	height:1.5em;
 	margin:0px;
 }
 
-#pdname {
+.pdname {
 	font-size:1.1em;
 	font-weight:bold;
 }
@@ -259,45 +265,46 @@ input[type="Submit"]{
 	left;
 }
 
-#wallContainer {
+.wallContainer {
 	float:right;
 	margin-top:23px;
 	width:65%;
 }
 
-#postToWall {
+.postToWall {
 	height:20px;
 	clear:both;
 }
 
-#postToWall form {
+.postToWall form {
 	margin-bottom:0px;
 }
 
-#postToWall input {
+.postToWall input {
 	float:left;
 	width:70%;
 }
 
-#postToWall input[type="Submit"]{
+.postToWall input[type="Submit"]{
 	width:auto;
 	margin-top:0px;
 }
 
-#wall {
+.wall {
 	float:left;
 	width:97%;
 	height:88%;
 	margin-top:5px;
+	margin-bottom:10px;
 	overflow:auto;
 }
 
-#wallMessages{
+.wallMessages{
 	float:left;
 	width:100%;
 }
 
-#wallMessages label {
+.wallMessages label {
 	width:auto;
 	height:auto;
 	line-height: 1.4em;
@@ -307,33 +314,17 @@ input[type="Submit"]{
 	font-weight: bold;
 }
 
-#refresh {
+.refresh {
 	float:left;
 	width:26px;
 	height:20px;
 	margin-left:10px;
 }
 
-#refresh img {
+.refresh img {
 	height:100%;
 	width:100%;
 }
-
-/*.refreshButton {
-	float:right;
-	height:25px;
-	width:25px;
-}
-
-.refreshButton:hover {
-	//background-color: #f0f0f0;
-	border-style:solid;
-}
-
-.refreshButton img {
-	height:95%;
-	width:95%;
-} */
 
 #browseSearch {
 	padding: 15 15px;
@@ -351,5 +342,7 @@ input[type="Submit"]{
 }
 
 #browseResult {
-	padding:15 15px;
+	height:85%;
+	padding-bottom:15px;
+	/*padding:15 15px;*/
 }
