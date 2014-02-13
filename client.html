@@ -49,7 +49,7 @@
 		<script type="text/view" id="profileView">
 			<div id="ProfileMain">
 				<div id="tabs">
-				<img src="img/logo.png" id="logoImg" onclick="tab('home')">
+				<a><img src="img/logo.png" id="logoImg" onclick="tab('home')"></a>
 				<ul>
 					<li id="li_home" class="active" onclick="tab('home')"><a>Home</a></li>
 					<li id="li_browse" onclick="tab('browse')"><a>Browse</a></li>
@@ -71,7 +71,7 @@
 										<input type="text" id="wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 										<input type="Submit" id="submitWall" class="dotBorder" value="Post">
 									</form>
-									<button id="refresh" class="dotBorder refresh" onclick="refreshWall(localStorage.token)"><img src="img/refreshbutton.png"></button>
+									<button id="refresh" class="dotBorder refresh" onclick="refreshWall(true)"><img src="img/refreshbutton.png"></button>
 								</div>
 								<div id="wall" class="dotBorder wall">
 									<div id="wallMessages" class="wallMessages">
@@ -91,10 +91,9 @@
 							</div>
 
 								<!-- the browsed user page -->
-							<div id="browseResult">
+							<div id="browseResultMessages"></div>
+							<div id="browseResult" style="display:none">
 							<!-- OBS! Display:none -->
-								<div id="browseResultMessages">
-								</div>
 								<div id="browse_personalInfo" class="dotBorder personalInfo">
 									<label id="browse_pdname" class="pdname"></label>
 									<label id="browse_pdlocation"></label>
@@ -103,11 +102,11 @@
 
 								<div id="browse_wallContainer" class="wallContainer">
 									<div id="browse_postToWall" class="postToWall">
-										<form name="browse_wallInput" onsubmit="return sendToWall(this, document.getElementById("browse_pdemail").value)">
+										<form name="browse_wallInput" onsubmit="return sendToWall(this, globalBrowsedEmail)">
 											<input type="text" id="browse_wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 											<input type="Submit" id="browse_submitWall" class="dotBorder" value="Post">
 										</form>
-										<button id="browse_refresh" class="dotBorder refresh" /*onclick="refreshWall(localStorage.token)"*/><img src="img/refreshbutton.png"></button>
+										<button id="browse_refresh" class="dotBorder refresh" onclick="refreshWall(false)"><img src="img/refreshbutton.png"></button>
 									</div>
 									<div id="browse_wall" class="dotBorder wall">
 										<div id="browse_wallMessages" class="wallMessages"></div>
