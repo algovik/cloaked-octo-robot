@@ -3,6 +3,8 @@ function loadView(){
 		document.getElementById("displayView").innerHTML = document.getElementById("profileView").innerHTML; //Shows profileView when user already has a token.
 		var email=serverstub.tokenToEmail(localStorage.token);
 		loadPersonalData(email, true);
+		var globalBrowsedEmail=null; //used to keep track of the email address of the currently browsed users.
+
 	} else {
 		document.getElementById("displayView").innerHTML = document.getElementById("welcomeView").innerHTML; //Else it shows the welcomeView.
 	}
@@ -50,6 +52,7 @@ function searchUser(formVar){
 	clearBrowse();
 	if(result["success"]){
 		loadPersonalData(email, false);
+		globalBrowsedEmail=email;
 	} else {
 		document.getElementById("browseResultMessages").innerHTML = result["message"];
 	}
@@ -219,8 +222,8 @@ Will use the serverstub to store a message in the specified users wall storage w
 */
 function sendToWall(formVar, toUserEmail){
 	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, toUserEmail);
-	alert(serverResponse["success"]);
-	return serverResponse["success"];
+	refreshWall(false);
+	return false; //serverResponse["success"];
 
 }
 
@@ -278,7 +281,7 @@ function addMessageToWall(messageVar, isCurrUser){
 }
 
 /*
-Clears the wall of messages. Used for refreshin the wall.
+Clears the wall of messages. Used for refreshing the wall.
 */
 function clearWall(isCurrUser){
 	var prefix="";
@@ -289,14 +292,22 @@ function clearWall(isCurrUser){
     	document.getElementById(prefix+"wallMessages").removeChild(document.getElementById(prefix+"wallMessages").childNodes[0]);
     }
 }
-
-function refreshWall(userToken){
-	var email = serverstub.tokenToEmail(localStorage.tokenToEmail);
-	clearWall(true);
-	listAllMessages(email, true);
-	return true;
+/*
+Refreshes the users home wall or a browsed wall, ie loads all messages again and displays.
+Could/should 
+*/
+function refreshWall(isCurrUser){
+	var email;
+	clearWall(isCurrUser);
+	if(isCurrUser){
+		email=serverstub.tokenToEmail(localStorage.token);
+	}
+	else{
+		email=globalBrowsedEmail;
+	}
+	loadPersonalData(email, isCurrUser);
+	return false;
 }
-
 /*
 Creates error messages and success messages with id's that allows us to later on 
 identify wheter they are success or error messages (Without knowledge of what content an error message or a 

@@ -71,7 +71,7 @@
 										<input type="text" id="wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 										<input type="Submit" id="submitWall" class="dotBorder" value="Post">
 									</form>
-									<button id="refresh" class="dotBorder" onclick="refreshWall(localStorage.token)"><img src="img/refreshbutton.png"></button>
+									<button id="refresh" class="dotBorder" onclick="refreshWall(true)"><img src="img/refreshbutton.png"></button>
 								</div>
 								<div id="wall" class="dotBorder">
 									<div id="wallMessages">
@@ -104,11 +104,11 @@
 
 								<div id="browse_wallContainer">
 									<div id="browse_postToWall">
-										<form name="browse_wallInput" onsubmit="return sendToWall(this, document.getElementById("browse_pdemail").value)">
+										<form name="browse_wallInput" onsubmit="return sendToWall(this, globalBrowsedEmail)">
 											<input type="text" id="browse_wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 											<input type="Submit" id="browse_submitWall" class="dotBorder" value="Post">
 										</form>
-										<button id="browse_refresh" class="dotBorder" /*onclick="refreshWall(localStorage.token)"*/><img src="img/refreshbutton.png"></button>
+										<button id="browse_refresh" class="dotBorder" onclick="refreshWall(false)"*/><img src="img/refreshbutton.png"></button>
 									</div>
 									<div id="browse_wall" class="dotBorder">
 										<div id="browse_wallMessages">
