@@ -294,7 +294,7 @@ function refreshWall(userToken){
 	var email = serverstub.tokenToEmail(localStorage.tokenToEmail);
 	clearWall(true);
 	listAllMessages(email, true);
-	return true;
+	// return true;
 }
 
 /*
