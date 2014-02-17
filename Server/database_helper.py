@@ -3,12 +3,14 @@
 #This file will be used by the server to access the database.
 
 def get_db():
-	#open database
+	if not hasattr(g, 'sqlite_db'):
+		g.sqlite_db = connect_db()
+	return g.sqlite_db
 
 def close_db():
-	#close database
+	if hasattr(g, 'sqlite_db'):
+        g.sqlite_db.close()
 
-def verify_password(email, password):
-	#create hash of password
-	#compare hash of password with hash of email's stored password
-	#if true, return True, else False
+def get_password(email):
+	db = get_db()
+	db.execute('')
