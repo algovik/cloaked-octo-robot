@@ -11,20 +11,15 @@ app.debug = True
 #HTTP functions
 @app.route('/signin')
 def sign_in(email, password):
-    try:
-        if verify_password(email, password):
-            token = ''
-            letters = ['a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
-                for i in xrange(36):
-                    token += choice(letters)
-
-            add_logged_in_user(email, token) #Should we keep a log of logged in users in db?
-            return {'success':True,'message':'Successfully signed in.','data':token}
-        else:
-            return {'success':False,'message':'Wrong username or password.'}
-    except:
+    if verify_email(email) and verify_password(email, password):
+        token = ''
+        letters = ['a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
+            for i in xrange(36):
+                token += choice(letters)
+        add_logged_in_user(email, token)
+        return {'success':True,'message':'Successfully signed in.','data':token}
+    else:
         return {'success':False,'message':'Wrong username or password.'}
-
 
 @app.route('/signup')
 def sign_up(email, password, firstname, familyname, gender, city, country):
@@ -33,8 +28,11 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
 
 @app.route('/signout')
 def sign_out(token):
-    #Call to appropriate function(s) in database_helper
-    return ''
+    if check_if_logged_in(token):
+        remove_logged_in_user(token)
+        return {'success':True,'message':'Successfully signed out'}
+    else:
+        return {'success':False,'message':'You are not signed in.'}
 
 
 @app.route('/changepassword')
@@ -65,10 +63,6 @@ def get_user_messages_by_email(token, email):
 @app.route('/postmessage')
 def post_message(token, message, email):
     #Call to appropirate function(s) in database_helper
-    return ''
-
-@app.route('/hash')
-def hash(password):
     return ''
 
 
