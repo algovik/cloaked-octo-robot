@@ -1,11 +1,15 @@
-CREATE TABLE users(
+CREATE TABLE Users(
 id INT AUTO INCREMENT,
-email VARCHAR(254),
-password VARCHAR(255),
-firstname VARCHAR(255),
-familyname VARCHAR(255),
-gender VARCHAR(10),
-city VARCHAR(255),
-country VARCHAR(255),
+Email VARCHAR(254),
+Password VARCHAR(255),
+Firstname VARCHAR(255),
+Familyname VARCHAR(255),
+Gender VARCHAR(10),
+City VARCHAR(255),
+Country VARCHAR(255),
 PRIMARY KEY(email)
 );
+
+CREATE TABLE LoggedInUsers(
+
+)
