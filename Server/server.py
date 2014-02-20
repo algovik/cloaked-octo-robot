@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import g
 from random import choice
 import database_helper
 import hashlib
@@ -11,19 +12,16 @@ app.debug = True
 #HTTP functions
 @app.route('/signin')
 def sign_in(email, password):
-    try:
-        if verify_password(email, password):
-            token = ''
-            letters = ['a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
-                for i in xrange(36):
-                    token += choice(letters)
-
-            add_logged_in_user(email, token) #Should we keep a log of logged in users in db?
-            return {'success':True,'message':'Successfully signed in.','data':token}
-        else:
-            return {'success':False,'message':'Wrong username or password.'}
-    except:
+    if database_helper.verify_email(email) and verify_password(email, password):
+        token = ''
+        letters = ['a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
+        for i in xrange(36):
+            token += choice(letters)
+        database_helper.add_logged_in_user(email, token)
+        return {'success':True,'message':'Successfully signed in.','data':token}
+    else:
         return {'success':False,'message':'Wrong username or password.'}
+
 
 #Useful to know about locals(): the dictionary does not neccessary contain the parameters in the expected order.
 #Parameter identifiers should be used when trying to retrieve a specific value.
@@ -38,8 +36,11 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
 
 @app.route('/signout')
 def sign_out(token):
-    #Call to appropriate function(s) in database_helper
-    return ''
+    if check_if_logged_in(token):
+        database_helper.remove_logged_in_user(token)
+        return {'success':True,'message':'Successfully signed out'}
+    else:
+        return {'success':False,'message':'You are not signed in.'}
 
 
 @app.route('/changepassword')
@@ -72,15 +73,28 @@ def post_message(token, message, email):
     #Call to appropirate function(s) in database_helper
     return ''
 
-@app.route('/hash')
-def hash(password):
-    return ''
+
+@app.route('/verify/<email>')
+def verify_email(email):
+    if database_helper.verify_email(email):
+        return 'Success'
+    else:
+        return 'Failure'
+
+@app.route('/adduser/<email>/<token>')
+def add_user(email, token):
+    database_helper.add_logged_in_user(email, token)
+
+@app.route('/readuser/<token>')
+def read_user(token):
+    database_helper.check_if_logged_in(token)
+
 
 
 #Local functions
 def verify_password(email, password):
     hash = hash_pwd(password)
-    if hash == get_password(email):
+    if hash == database_helper.get_password(email):
         return True
     else:
         return False
@@ -106,7 +120,8 @@ def not_none(fieldName):
 
 @app.teardown_appcontext
 def teardown_app(exception):
-    #Close after app context is teared down.
+    if hasattr(g, 'sqlite_db'):
+        g.sqlite_db.close()
 
 
 if __name__ == '__main__':
