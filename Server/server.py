@@ -24,6 +24,8 @@ def sign_in(email, password):
 
 @app.route('/signup')
 def sign_up(email, password, firstname, familyname, gender, city, country):
+    if validate_signup(locals()):
+
     #Call to appropirate function(s) in database_helper
     return ''
 
@@ -97,6 +99,19 @@ def hash_pwd(password):
     m.update(password)
     return m.hexdigest()
 
+def validate_signup(formDictionary):
+    for val in dictionary.values():
+        if not_none(val)!=True:
+            return False
+
+    return True
+
+def not_none(fieldName):
+    valid=True
+    if fieldName is "" or None:
+        valid=False
+
+    return valid
 
 @app.teardown_appcontext
 def teardown_app(exception):
