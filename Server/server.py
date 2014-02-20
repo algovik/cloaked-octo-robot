@@ -25,10 +25,13 @@ def sign_in(email, password):
     except:
         return {'success':False,'message':'Wrong username or password.'}
 
-
+#Useful to know about locals(): the dictionary does not neccessary contain the parameters in the expected order.
+#Parameter identifiers should be used when trying to retrieve a specific value.
 @app.route('/signup')
 def sign_up(email, password, firstname, familyname, gender, city, country):
-    if validate_signup(locals()):
+    if database_helper.userExists(email)==False:
+        if validate_signup(locals()):
+            database_helper.insertUser(locals())
 
     #Call to appropirate function(s) in database_helper
     return ''
