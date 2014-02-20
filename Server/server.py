@@ -27,11 +27,10 @@ def sign_in(email, password):
 #Parameter identifiers should be used when trying to retrieve a specific value.
 @app.route('/signup')
 def sign_up(email, password, firstname, familyname, gender, city, country):
-    if database_helper.userExists(email)==False:
+    if database_helper.verify_email(email)==False:
         if validate_signup(locals()):
-            database_helper.insertUser(locals())
+            database_helper.insert_new_user(locals())
 
-    #Call to appropirate function(s) in database_helper
     return ''
 
 @app.route('/signout')
@@ -113,7 +112,7 @@ def validate_signup(formDictionary):
 
 def not_none(fieldName):
     valid=True
-    if fieldName is "" or None:
+    if fieldName=="" or fieldName is None: #'is' ~ identical operator, == ~ equality operator
         valid=False
 
     return valid

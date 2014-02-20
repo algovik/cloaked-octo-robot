@@ -19,10 +19,17 @@ def close_db():
 def verify_email(email):
     db = get_db()
     cur = db.execute("SELECT Email FROM Users WHERE Email=" + email)
+    close_db(); # We probobly should close db connections roojjttt?
     if cur.fetchone() is None:
         return False
     else:
         return True
+
+#Takes in a dictionary containing the attributes: email, password, firstname, familyname, gender, city, country
+def insert_new_user(user):
+    db = get_db()
+    cur = db.execute("INSERT INTO Users (Email, Password, Firstname, Familyname, Gender, City, Country) VALUES (?,?,?,?,?,?,?)", (user["email"], user["password"], user["firstname"], user["familyname"], user["gender"], user["city"], user["country"]))
+    cur.commit()
 
 def add_logged_in_user(email, token):
     db = get_db()
