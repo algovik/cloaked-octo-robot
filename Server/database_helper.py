@@ -17,7 +17,7 @@ def close_db():
         g.sqlite_db.close()
 
 
-#Works
+#Working
 def verify_email(email):
     db = get_db()
     cur = db.execute("SELECT Email FROM Users WHERE Email='" + email + "'")
@@ -36,28 +36,34 @@ def insert_new_user(user):
     db.commit()
     #close_db()
 
-#Works for test function add_user
+#Working
 def add_logged_in_user(email, token):
     db = get_db()
     db.execute("INSERT INTO LoggedInUsers (Email, Token) VALUES (?,?)", (email,token))
     db.commit()
     #close_db()
 
-#Works for test function remove_user, but not for sign_out
+#Working
 def remove_logged_in_user(token):
     db = get_db()
     db.execute("DELETE FROM LoggedInUsers WHERE Token='" + token + "'")
     db.commit()
     #close_db()
 
-#Doesn't work
+#Working
+def set_password(email, password):
+    db = get_db()
+    db.execute("UPDATE Users SET Password='" + password + "' WHERE Email='" + email + "'")
+    db.commit()
+
+#Working
 def get_password(email):
     db = get_db()
     cur = db.execute("SELECT Password FROM Users WHERE Email='" + email + "'")
     result = cur.fetchone()
     return result[0]
 
-#Works for test function read_user
+#Working
 def check_if_logged_in(token):
     db = get_db()
     cur = db.execute("SELECT * FROM LoggedInUsers WHERE Token='" + token + "'")
@@ -67,3 +73,10 @@ def check_if_logged_in(token):
     else:
         #close_db()
         return True
+
+#Working
+def token_to_email(token):
+    db = get_db()
+    cur = db.execute("SELECT Email FROM LoggedInUsers WHERE Token='" + token + "'")
+    result = cur.fetchone()
+    return result[0]
