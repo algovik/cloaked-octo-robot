@@ -19,9 +19,9 @@ def sign_in(email, password):
         for i in xrange(36):
             token += choice(letters)
         database_helper.add_logged_in_user(email, token)
-        return token
+        return token + "\n"
     else:
-        return 'Wrong username or password.'
+        return 'Wrong username or password.\n'
 
 
 #Useful to know about locals(): the dictionary does not neccessary contain the parameters in the expected order.
@@ -42,9 +42,9 @@ def sign_up(email, password, firstname, familyname, gender, city, country):
 def sign_out(token):
     if database_helper.check_if_logged_in(token):
         database_helper.remove_logged_in_user(token)
-        return 'Succesfully logged out.'
+        return 'Succesfully logged out.\n'
     else:
-        return 'You are not signed in.'
+        return 'You are not signed in.\n'
 
 #Working
 @app.route('/changepassword/<token>/<old_password>/<new_password>')
@@ -66,7 +66,7 @@ def get_user_data_by_token(token):
         email = database_helper.token_to_email(token)
         return get_user_data_by_email(token, email)
     else:
-        return 'No such user.'
+        return 'No such user.\n'
 
 #Working
 @app.route('/getuserdatabyemail/<token>/<email>')
@@ -74,11 +74,11 @@ def get_user_data_by_email(token, email):
     if database_helper.check_if_logged_in(token):
         if verify_email(email):
             match = database_helper.get_user_data(email)
-            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country']
+            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country'] + "\n"
         else:
-            return 'No such user.'
+            return 'No such user.\n'
     else:
-        return 'You are not signed in.'
+        return 'You are not signed in.\n'
 
 @app.route('/getusermessagesbytoken')
 def get_user_messages_by_token(token):
@@ -146,7 +146,6 @@ def validate_signup(formDictionary):
     for val in formDictionary.values():
         if not_none(val)!=True:
             return False
-
     return True
 
 def not_none(fieldName):
