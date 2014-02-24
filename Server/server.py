@@ -133,7 +133,8 @@ def not_none(fieldName):
     return valid
 
 @app.teardown_appcontext
-def teardown_app(exception):
+def close_db(error):
+    print ("Closing db")
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
