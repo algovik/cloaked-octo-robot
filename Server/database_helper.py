@@ -96,7 +96,7 @@ def get_user_data(email):
 def get_user_messages(email):
     db = get_db()
     cur = db.execute("SELECT Sender, Content FROM Messages WHERE Recipient='" + email + "'")
-    result = [dict(from=row[0], content=row[1]) for row in cur.fetchall()]
+    result = [dict(sender=row[0], content=row[1]) for row in cur.fetchall()]
     return result
 
 #sender and recipient parameters are the corresponding email addresses

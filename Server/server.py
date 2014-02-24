@@ -28,14 +28,15 @@ def sign_in(email, password):
 #Parameter identifiers should be used when trying to retrieve a specific value.
 @app.route('/signup/<email>/<password>/<firstname>/<familyname>/<gender>/<city>/<country>')
 def sign_up(email, password, firstname, familyname, gender, city, country):
+    new_user=dict(email=email, password=password, firstname=firstname, familyname=familyname, gender=gender, city=city, country=country)
     if database_helper.verify_email(email)==False:
-        if validate_signup(locals()):
-            database_helper.insert_new_user(locals())
-            return {'success':True, 'message':'Successfully created a new user.'}        
+        if validate_signup(new_user):
+            database_helper.insert_new_user(new_user)
+            return 'Successfully created a new user.\n'       
         else:
-            return {'success':False, 'message':'Formdata not complete.'}
+            return 'Formdata not complete.\n'
     else:
-        return {'success':False, 'message':'User already exists.'}
+        return 'User already exists.'
 
 #Working
 @app.route('/signout/<token>')
@@ -182,7 +183,7 @@ def stringify_messages(messages):
     result="Number | Sender | Content\n";
     index=0;
     for message in messages:
-        result = result + index +"|"+ message['from'] + "|" + message['content'] + "\n"
+        result = result + index +"|"+ message['sender'] + "|" + message['content'] + "\n"
         index=index+1;
     return result
 
