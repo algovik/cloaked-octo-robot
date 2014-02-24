@@ -105,3 +105,4 @@ def insert_new_message(sender, message, recipient):
     cur = db.execute("INSERT INTO Messages (Sender, Recipient, Content) VALUES (?,?,?)", (sender, recipient, message))
     db.commit()
     #this should return something later, catch exceptions and return error code ot sumtin
+    

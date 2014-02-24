@@ -23,12 +23,10 @@ def sign_in(email, password):
     else:
         return 'Wrong username or password.'
 
-
-#Useful to know about locals(): the dictionary does not neccessary contain the parameters in the expected order.
 #Parameter identifiers should be used when trying to retrieve a specific value.
 @app.route('/signup/<email>/<password>/<firstname>/<familyname>/<gender>/<city>/<country>')
 def sign_up(email, password, firstname, familyname, gender, city, country):
-    new_user=dict(email=email, password=password, firstname=firstname, familyname=familyname, gender=gender, city=city, country=country)
+    new_user=dict(email=email, password=hash_pwd(password), firstname=firstname, familyname=familyname, gender=gender, city=city, country=country)
     if database_helper.verify_email(email)==False:
         if validate_signup(new_user):
             database_helper.insert_new_user(new_user)
@@ -180,11 +178,9 @@ def not_none(fieldName):
 
 #Takes in a list of dictionaries(dict(from, content)) and 'stringifies'
 def stringify_messages(messages):
-    result="Number | Sender | Content\n";
-    index=0;
+    result="Sender | Content\n";
     for message in messages:
-        result = result + index +"|"+ message['sender'] + "|" + message['content'] + "\n"
-        index=index+1;
+        result = result +"|"+ message['sender'] + "|" + message['content'] + "\n"
     return result
 
 @app.teardown_appcontext
