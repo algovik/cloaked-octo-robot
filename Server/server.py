@@ -23,19 +23,18 @@ def sign_in(email, password):
     else:
         return 'Wrong username or password.\n'
 
-
-#Useful to know about locals(): the dictionary does not neccessary contain the parameters in the expected order.
 #Parameter identifiers should be used when trying to retrieve a specific value.
 @app.route('/signup/<email>/<password>/<firstname>/<familyname>/<gender>/<city>/<country>')
 def sign_up(email, password, firstname, familyname, gender, city, country):
+    new_user=dict(email=email, password=hash_pwd(password), firstname=firstname, familyname=familyname, gender=gender, city=city, country=country)
     if database_helper.verify_email(email)==False:
-        if validate_signup(locals()):
-            database_helper.insert_new_user(locals())
-            return {'success':True, 'message':'Successfully created a new user.'}        
+        if validate_signup(new_user):
+            database_helper.insert_new_user(new_user)
+            return 'Successfully created a new user.\n'       
         else:
-            return {'success':False, 'message':'Formdata not complete.'}
+            return 'Formdata not complete.\n'
     else:
-        return {'success':False, 'message':'User already exists.'}
+        return 'User already exists.'
 
 #Working
 @app.route('/signout/<token>')
@@ -80,20 +79,41 @@ def get_user_data_by_email(token, email):
     else:
         return 'You are not signed in.\n'
 
-@app.route('/getusermessagesbytoken')
+#Need to retrieve token
+@app.route('/getusermessagesbytoken/<token>')
 def get_user_messages_by_token(token):
-    #Call to appropirate function(s) in database_helper
-    return ''
+    if database_helper.check_if_logged_in(token):
+        email = database_helper.token_to_email(token)
+        return get_user_messages_by_email(token, email)
+    else:
+        return 'No such user.'
 
-@app.route('/getusermessagesbyemail')
+@app.route('/getusermessagesbyemail/<token>/<email>')
 def get_user_messages_by_email(token, email):
-    #Call to appropirate function(s) in database_helper
-    return ''
+    if database_helper.check_if_logged_in(token):
+        if database_helper.verify_email(email):
+            matches = database_helper.get_user_messages(email)
+            result = stringify_messages(matches)
+            return result
+        else:
+            return 'User not found.'
+    else:
+        return 'Must be logged in to retrieve messages.'
 
-@app.route('/postmessage')
+@app.route('/postmessage/<token>/<message>/<email>')
 def post_message(token, message, email):
-    #Call to appropirate function(s) in database_helper
-    return ''
+    if database_helper.check_if_logged_in(token):
+        sender = database_helper.token_to_email(token)
+        if not_none(message):
+            if database_helper.verify_email(email):
+                database_helper.insert_new_message(sender, message, email)
+                return 'Message has been sent.'
+            else:
+                return 'No such recipient.'
+        else:
+            return 'Message must not be empty.'
+    else:
+        return 'Sender must be logged in.'
 
 #Test functions for trying out single database_helper functions.
 @app.route('/verify/<email>')
@@ -154,6 +174,13 @@ def not_none(fieldName):
         valid=False
 
     return valid
+
+#Takes in a list of dictionaries(dict(from, content)) and 'stringifies'
+def stringify_messages(messages):
+    result="Sender | Content\n";
+    for message in messages:
+        result = result +"|"+ message['sender'] + "|" + message['content'] + "\n"
+    return result
 
 @app.teardown_appcontext
 def close_db(error):

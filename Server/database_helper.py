@@ -3,9 +3,12 @@ from flask import g
 import sqlite3
 
 def connect_db():
-    rv = sqlite3.connect('database.db')
-    rv.row_factory = sqlite3.Row
-    return rv
+    try:
+        rv = sqlite3.connect('database.db')
+        rv.row_factory = sqlite3.Row
+        return rv
+    except sqlite3.Error as e:
+        print "An error occured while connecting to database:", e.args[0]
 
 def get_db():
     if not hasattr(g, 'sqlite_db'):
@@ -18,6 +21,7 @@ def close_db():
 
 
 #Working
+#Return True if there is a user with that email address and False otherwise. 
 def verify_email(email):
     db = get_db()
     cur = db.execute("SELECT Email FROM Users WHERE Email='" + email + "'")
@@ -60,8 +64,8 @@ def set_password(email, password):
 def get_password(email):
     db = get_db()
     cur = db.execute("SELECT Password FROM Users WHERE Email='" + email + "'")
-    result = cur.fetchone()
-    return result[0]
+
+    return cur.fetchone()[0]
 
 #Working
 def check_if_logged_in(token):
@@ -88,5 +92,17 @@ def get_user_data(email):
     result = [dict(email=row[0], firstname=row[1], familyname=row[2], gender=row[3], city=row[4], country=row[5]) for row in cur.fetchall()]
     return result
 
+#Returns a list of dictionaries.
+def get_user_messages(email):
+    db = get_db()
+    cur = db.execute("SELECT Sender, Content FROM Messages WHERE Recipient='" + email + "'")
+    result = [dict(sender=row[0], content=row[1]) for row in cur.fetchall()]
+    return result
 
-
+#sender and recipient parameters are the corresponding email addresses
+def insert_new_message(sender, message, recipient):
+    db = get_db()
+    cur = db.execute("INSERT INTO Messages (Sender, Recipient, Content) VALUES (?,?,?)", (sender, recipient, message))
+    db.commit()
+    #this should return something later, catch exceptions and return error code ot sumtin
+    
