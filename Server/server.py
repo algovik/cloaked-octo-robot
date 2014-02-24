@@ -80,20 +80,41 @@ def get_user_data_by_email(token, email):
     else:
         return 'You are not signed in.'
 
-@app.route('/getusermessagesbytoken')
+#Need to retrieve token
+@app.route('/getusermessagesbytoken/<token>')
 def get_user_messages_by_token(token):
-    #Call to appropirate function(s) in database_helper
-    return ''
+    if database_helper.check_if_logged_in(token):
+        email = database_helper.token_to_email(token)
+        return get_user_messages_by_email(token, email)
+    else:
+        return 'No such user.'
 
-@app.route('/getusermessagesbyemail')
+@app.route('/getusermessagesbyemail/<token>/<email>')
 def get_user_messages_by_email(token, email):
-    #Call to appropirate function(s) in database_helper
-    return ''
+    if database_helper.check_if_logged_in(token):
+        if database_helper.verify_email(email):
+            matches = database_helper.get_user_messages(email)
+            result = stringify_messages(matches)
+            return result
+        else:
+            return 'User not found.'
+    else:
+        return 'Must be logged in to retrieve messages.'
 
-@app.route('/postmessage')
+@app.route('/postmessage/<token>/<message>/<email>')
 def post_message(token, message, email):
-    #Call to appropirate function(s) in database_helper
-    return ''
+    if database_helper.check_if_logged_in(token):
+        sender = database_helper.token_to_email(token)
+        if not_none(message):
+            if database_helper.verify_email(email):
+                database_helper.insert_new_message(sender, message, email)
+                return 'Message has been sent.'
+            else:
+                return 'No such recipient.'
+        else:
+            return 'Message must not be empty.'
+    else:
+        return 'Sender must be logged in.'
 
 #Test functions for trying out single database_helper functions.
 @app.route('/verify/<email>')
@@ -155,6 +176,15 @@ def not_none(fieldName):
         valid=False
 
     return valid
+
+#Takes in a list of dictionaries(dict(from, content)) and 'stringifies'
+def stringify_messages(messages):
+    result="Number | Sender | Content\n";
+    index=0;
+    for message in messages:
+        result = result + index +"|"+ message['from'] + "|" + message['content'] + "\n"
+        index=index+1;
+    return result
 
 @app.teardown_appcontext
 def close_db(error):

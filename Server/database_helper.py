@@ -21,6 +21,7 @@ def close_db():
 
 
 #Working
+#Return True if there is a user with that email address and False otherwise. 
 def verify_email(email):
     db = get_db()
     cur = db.execute("SELECT Email FROM Users WHERE Email='" + email + "'")
@@ -90,4 +91,17 @@ def get_user_data(email):
     cur = db.execute("SELECT Email, Firstname, Familyname, Gender, City, Country FROM Users WHERE Email='" + email + "'")
     result = [dict(email=row[0], firstname=row[1], familyname=row[2], gender=row[3], city=row[4], country=row[5]) for row in cur.fetchall()]
     return result
-    
+
+#Returns a list of dictionaries.
+def get_user_messages(email):
+    db = get_db()
+    cur = db.execute("SELECT Sender, Content FROM Messages WHERE Recipient='" + email + "'")
+    result = [dict(from=row[0], content=row[1]) for row in cur.fetchall()]
+    return result
+
+#sender and recipient parameters are the corresponding email addresses
+def insert_new_message(sender, message, recipient):
+    db = get_db()
+    cur = db.execute("INSERT INTO Messages (Sender, Recipient, Content) VALUES (?,?,?)", (sender, recipient, message))
+    db.commit()
+    #this should return something later, catch exceptions and return error code ot sumtin
