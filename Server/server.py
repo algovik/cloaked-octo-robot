@@ -59,15 +59,26 @@ def change_password(token, old_password, new_password):
     else:
         return 'You are not logged in.\n'
 
-@app.route('/getuserdatabytoken')
+#Working
+@app.route('/getuserdatabytoken/<token>')
 def get_user_data_by_token(token):
-    #Call to appropirate function(s) in database_helper
-    return ''
+    if database_helper.check_if_logged_in(token):
+        email = database_helper.token_to_email(token)
+        return get_user_data_by_email(token, email)
+    else:
+        return 'No such user.'
 
-@app.route('/getuserdatabyemail')
+#Working
+@app.route('/getuserdatabyemail/<token>/<email>')
 def get_user_data_by_email(token, email):
-    #Call to appropirate function(s) in database_helper
-    return ''
+    if database_helper.check_if_logged_in(token):
+        if verify_email(email):
+            match = database_helper.get_user_data(email)
+            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country']
+        else:
+            return 'No such user.'
+    else:
+        return 'You are not signed in.'
 
 @app.route('/getusermessagesbytoken')
 def get_user_messages_by_token(token):

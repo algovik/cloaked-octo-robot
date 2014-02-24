@@ -80,3 +80,13 @@ def token_to_email(token):
     cur = db.execute("SELECT Email FROM LoggedInUsers WHERE Token='" + token + "'")
     result = cur.fetchone()
     return result[0]
+
+#Working
+def get_user_data(email):
+    db = get_db()
+    cur = db.execute("SELECT Email, Firstname, Familyname, Gender, City, Country FROM Users WHERE Email='" + email + "'")
+    result = [dict(email=row[0], firstname=row[1], familyname=row[2], gender=row[3], city=row[4], country=row[5]) for row in cur.fetchall()]
+    return result
+
+
+
