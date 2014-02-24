@@ -100,10 +100,12 @@ def get_user_messages_by_email(token, email):
     else:
         return 'Must be logged in to retrieve messages.'
 
-@app.route('/postmessage/<token>/<message>/<email>')
+@app.route("/postmessage/<token>", methods=['GET','POST'])
 def post_message(token, message, email):
     if database_helper.check_if_logged_in(token):
         sender = database_helper.token_to_email(token)
+        message = request.form['message']
+        email = request.form['email']
         if not_none(message):
             if database_helper.verify_email(email):
                 print(message)
