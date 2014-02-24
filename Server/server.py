@@ -106,6 +106,7 @@ def post_message(token, message, email):
         sender = database_helper.token_to_email(token)
         if not_none(message):
             if database_helper.verify_email(email):
+                print(message)
                 database_helper.insert_new_message(sender, message, email)
                 return 'Message has been sent.'
             else:
