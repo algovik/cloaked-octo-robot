@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import g
+from flask import request
 from random import choice
 import database_helper
 import hashlib
@@ -24,8 +25,16 @@ def sign_in(email, password):
         return 'Wrong username or password.'
 
 #Parameter identifiers should be used when trying to retrieve a specific value.
-@app.route('/signup/<email>/<password>/<firstname>/<familyname>/<gender>/<city>/<country>')
-def sign_up(email, password, firstname, familyname, gender, city, country):
+@app.route("/signup", methods=['POST'])
+def sign_up():
+    email = request.form['email']
+    password = request.form['password']
+    firstname = request.form['firstname']
+    familyname = request.form['familyname']
+    gender = request.form['gender']
+    city = request.form['city']
+    country = request.form['country']
+
     new_user=dict(email=email, password=hash_pwd(password), firstname=firstname, familyname=familyname, gender=gender, city=city, country=country)
     if database_helper.verify_email(email)==False:
         if validate_signup(new_user):
@@ -100,12 +109,14 @@ def get_user_messages_by_email(token, email):
     else:
         return 'Must be logged in to retrieve messages.'
 
-@app.route("/postmessage/<token>", methods=['GET','POST'])
-def post_message(token, message, email):
+@app.route("/postmessage", methods=['POST'])
+def post_message():
+    token = request.form['token']
+    return token
+    message = request.form['message']
+    email = request.form['email']
     if database_helper.check_if_logged_in(token):
         sender = database_helper.token_to_email(token)
-        message = request.form['message']
-        email = request.form['email']
         if not_none(message):
             if database_helper.verify_email(email):
                 database_helper.insert_new_message(sender, message, email)
