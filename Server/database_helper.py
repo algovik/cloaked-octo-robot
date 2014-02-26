@@ -18,8 +18,7 @@ def get_db():
 def close_db():
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
-
-
+        
 #Working
 #Return True if there is a user with that email address and False otherwise. 
 def verify_email(email):
@@ -32,20 +31,25 @@ def verify_email(email):
         #close_db()
         return True
 
-#Doesn't work
 #Takes in a dictionary containing the attributes: email, password, firstname, familyname, gender, city, country
 def insert_new_user(user):
     db = get_db()
-    db.execute("INSERT INTO Users (Email, Password, Firstname, Familyname, Gender, City, Country) VALUES (?,?,?,?,?,?,?)", (user["email"], user["password"], user["firstname"], user["familyname"], user["gender"], user["city"], user["country"]))
-    db.commit()
-    #close_db()
+    try:
+        db.execute("INSERT INTO Users (Email, Password, Firstname, Familyname, Gender, City, Country) VALUES (?,?,?,?,?,?,?)", (user["email"], user["password"], user["firstname"], user["familyname"], user["gender"], user["city"], user["country"]))
+        db.commit()
+        return True
+    except sqlite3.IntegrityError as e:
+        return False
 
 #Working
 def add_logged_in_user(email, token):
     db = get_db()
-    db.execute("INSERT INTO LoggedInUsers (Email, Token) VALUES (?,?)", (email,token))
-    db.commit()
-    #close_db()
+    try:
+        db.execute("INSERT INTO LoggedInUsers (Email, Token) VALUES (?,?)", (email,token))
+        db.commit()
+        return True
+    except sqlite3.IntegrityError as e:
+        return False
 
 #Working
 def remove_logged_in_user(token):
@@ -105,4 +109,3 @@ def insert_new_message(sender, message, recipient):
     cur = db.execute("INSERT INTO Messages (Sender, Recipient, Content) VALUES (?,?,?)", (sender, recipient, message))
     db.commit()
     #this should return something later, catch exceptions and return error code ot sumtin
-    

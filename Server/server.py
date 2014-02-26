@@ -11,93 +11,123 @@ app.debug = True
 
 
 #HTTP functions
-#Working
-@app.route('/signin/<email>/<password>')
-def sign_in(email, password):
+#Parameters: email, password
+@app.route('/signin', methods=['POST'])
+def sign_in():
+    email = request.form['email']#for lab 3, use request.form.get('email'), works with the 'send' function we are using
+    password = request.form['password']
     if database_helper.verify_email(email) and verify_password(email, password):
         token = ''
-        letters = ['a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
+        letters = map(chr, range(97, 123) + range(65,91) + range(49,58))
+        #letters = ['a','b','c','d','e','f','g','h','i','k','l','m','n','o','p','q','r','s','t','u','v','w','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
         for i in xrange(36):
             token += choice(letters)
-        database_helper.add_logged_in_user(email, token)
-        return token
+        success_bool = database_helper.add_logged_in_user(email, token)
+        if success_bool:
+            return token + ""
+        else:
+            return 'Already signed in.'
     else:
         return 'Wrong username or password.'
 
 #Parameter identifiers should be used when trying to retrieve a specific value.
-@app.route("/signup", methods=['POST'])
+#Parameters: email, password, firstname, familyname, gender, city, country
+@app.route('/signup', methods=['POST'])
 def sign_up():
     email = request.form['email']
-    password = request.form['password']
-    firstname = request.form['firstname']
-    familyname = request.form['familyname']
-    gender = request.form['gender']
-    city = request.form['city']
-    country = request.form['country']
-
-    new_user=dict(email=email, password=hash_pwd(password), firstname=firstname, familyname=familyname, gender=gender, city=city, country=country)
+    new_user=dict(email=email, password=hash_pwd(request.form['password']), firstname=request.form['firstname'], familyname=request.form['familyname'], gender=request.form['gender'], city=request.form['city'], country=request.form['country'])
     if database_helper.verify_email(email)==False:
         if validate_signup(new_user):
             database_helper.insert_new_user(new_user)
-            return 'Successfully created a new user.\n'       
+            return 'Successfully created a new user.'       
         else:
-            return 'Formdata not complete.\n'
+            return 'Formdata not complete.'
     else:
         return 'User already exists.'
 
-#Working
-@app.route('/signout/<token>')
-def sign_out(token):
+#Parameters: token
+@app.route('/signout', methods=['GET'])
+def sign_out():
+    token = request.args.get('token')
+    if not_none(token)==False:
+        return 'Ah ah ah! You did not use the magic querystring.' 
     if database_helper.check_if_logged_in(token):
         database_helper.remove_logged_in_user(token)
         return 'Succesfully logged out.'
     else:
         return 'You are not signed in.'
 
-#Working
-@app.route('/changepassword/<token>/<old_password>/<new_password>')
-def change_password(token, old_password, new_password):
+#Parameters: token, old_password, new_password
+@app.route('/changepassword', methods=['POST'])
+def change_password():
+    token = request.args.get('token')
+    if not_none(token)==False:
+        return 'Ah ah ah! That is not a token, THIS is a token: asA5hG9anfG7HlpzK1.'
     if database_helper.check_if_logged_in(token):
         email = database_helper.token_to_email(token)
-        if verify_password(email,old_password):
-            database_helper.set_password(email, hash_pwd(new_password))
-            return 'Password changed.\n'
+        old_pw=request.form['old_password']
+        new_pw=request.form['new_password']
+        if not_none(old_pw)==False or not_none(new_pw)==False:
+            return 'Passwords can not be null.'
+        if old_pw==new_pw:
+            return 'New password must be different from old password.'
+        if verify_password(email,old_pw):
+            database_helper.set_password(email, hash_pwd(new_pw))
+            return 'Password changed.'
         else: 
-            return 'Wrong password.\n'
+            return 'Wrong password.'
     else:
-        return 'You are not logged in.\n'
+        return 'You are not logged in.'
 
-#Working
-@app.route('/getuserdatabytoken/<token>')
-def get_user_data_by_token(token):
+#Parameters: token
+@app.route('/getuserdatabytoken', methods=['GET'])
+def get_user_data_by_token():
+    token = request.args.get('token')
+    if not_none(token)==False:
+        return 'Ah ah ah! That is not a token, THIS is a token: asA5hG9anfG7HlpzK1.'
     if database_helper.check_if_logged_in(token):
         email = database_helper.token_to_email(token)
         return get_user_data_by_email(token, email)
     else:
         return 'No such user.'
 
-#Working
-@app.route('/getuserdatabyemail/<token>/<email>')
+#Parameters: token, email
+@app.route('/getuserdatabyemail', methods=['GET'])
+def get_user_data_by_email_route():
+    token = request.args.get('token')
+    email = request.args.get('email')
+    if not_none(token)==False or not_none(email)==False:
+        return 'Invalid querystring.'
+    return get_user_data_by_email(token,email)
+
 def get_user_data_by_email(token, email):
     if database_helper.check_if_logged_in(token):
-        if verify_email(email):
+        if verify_email(email)==True:#must write like this in python, just 'verify_email(email):' doesn't work
             match = database_helper.get_user_data(email)
-            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country']
+            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country'] + ""
         else:
             return 'No such user.'
     else:
         return 'You are not signed in.'
 
-#Need to retrieve token
-@app.route('/getusermessagesbytoken/<token>')
-def get_user_messages_by_token(token):
-    if database_helper.check_if_logged_in(token):
-        email = database_helper.token_to_email(token)
-        return get_user_messages_by_email(token, email)
-    else:
-        return 'No such user.'
+#Parameters: token
+@app.route('/getusermessagesbytoken', methods=['GET'])
+def get_user_messages_by_token():
+    token = request.args.get('token')
+    if not_none(token)==False:
+        return 'Invalid querystring.'
+    email = database_helper.token_to_email(token)
+    return get_user_messages_by_email(token, email)
 
-@app.route('/getusermessagesbyemail/<token>/<email>')
+#Parameters: token, email
+@app.route('/getusermessagesbyemail', methods=['GET'])
+def get_user_messages_by_email_route():
+    token = request.args.get('token')
+    email = request.args.get('email')
+    if not_none(token)==False or not_none(email)==False:
+        return 'Invalid querystring.'
+    return get_user_messages_by_email(token, email)
+
 def get_user_messages_by_email(token, email):
     if database_helper.check_if_logged_in(token):
         if database_helper.verify_email(email):
@@ -109,12 +139,15 @@ def get_user_messages_by_email(token, email):
     else:
         return 'Must be logged in to retrieve messages.'
 
-@app.route("/postmessage", methods=['POST'])
+
+#Parameters: token, message, email
+@app.route('/postmessage', methods=['POST'])
 def post_message():
-    token = request.form['token']
-    return token
-    message = request.form['message']
-    email = request.form['email']
+    token = request.form.get('token')
+    message = request.form.get('message')
+    email = request.form.get('email')
+    if not_none(token)==False or not_none(email)==False:
+        return 'Invalid querystring.'
     if database_helper.check_if_logged_in(token):
         sender = database_helper.token_to_email(token)
         if not_none(message):
@@ -132,9 +165,9 @@ def post_message():
 @app.route('/verify/<email>')
 def verify_email(email):
     if database_helper.verify_email(email):
-        return 'User exists.\n'
+        return 'User exists.'
     else:
-        return 'User does not exist.\n'
+        return 'User does not exist.'
 
 @app.route('/adduser/<email>/<token>')
 def add_user(email, token):
@@ -149,9 +182,9 @@ def remove_user(token):
 @app.route('/readuser/<token>')
 def read_user(token):
     if database_helper.check_if_logged_in(token):
-        return 'User is logged in.\n'
+        return 'User is logged in.'
     else:
-        return 'User is not logged in.\n'
+        return 'User is not logged in.'
 
 @app.route('/getpassword/<email>')
 def get_password(email):
@@ -179,7 +212,6 @@ def validate_signup(formDictionary):
     for val in formDictionary.values():
         if not_none(val)!=True:
             return False
-
     return True
 
 def not_none(fieldName):
@@ -191,9 +223,9 @@ def not_none(fieldName):
 
 #Takes in a list of dictionaries(dict(from, content)) and 'stringifies'
 def stringify_messages(messages):
-    result="Sender | Content\n";
+    result="Sender | Content";
     for message in messages:
-        result = result +"|"+ message['sender'] + "|" + message['content'] + "\n"
+        result = result +"|"+ message['sender'] + "|" + message['content'] + ""
     return result
 
 @app.teardown_appcontext
