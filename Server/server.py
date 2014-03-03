@@ -22,7 +22,7 @@ def sign_in():
         for i in xrange(36):
             token += choice(letters)
         database_helper.add_logged_in_user(email, token)
-        return token + ""
+        return token
     else:
         return 'Wrong username or password.'
 
@@ -84,7 +84,7 @@ def get_user_data_by_email(token, email):
     if database_helper.check_if_logged_in(token):
         if verify_email(email):
             match = database_helper.get_user_data(email)
-            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country'] + ""
+            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country']
         else:
             return 'No such user.'
     else:
