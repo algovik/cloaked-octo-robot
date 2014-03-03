@@ -31,7 +31,8 @@ def verify_email(email):
         #close_db()
         return True
 
-#Takes in a dictionary containing the attributes: email, password, firstname, familyname, gender, city, country
+#Parameter(s): Dictionary containing the attributes: email, password, firstname, familyname, gender, city, country
+#Returns: True if the insertion is complete, False otherwise.
 def insert_new_user(user):
     db = get_db()
     try:

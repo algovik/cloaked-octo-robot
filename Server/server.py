@@ -4,6 +4,7 @@ from flask import request
 from random import choice
 import database_helper
 import hashlib
+import json
 
 app = Flask(__name__)
 app.debug = True
@@ -12,10 +13,11 @@ app.debug = True
 
 #HTTP functions
 #Parameters: email, password
+#Returns {"success":True/False, "message":Success- or errormessage, "data":token}
 @app.route('/signin', methods=['POST'])
 def sign_in():
-    email = request.form['email']#for lab 3, use request.form.get('email'), works with the 'send' function we are using
-    password = request.form['password']
+    email = request.form.get('email')
+    password = request.form.get('password')
     if database_helper.verify_email(email) and verify_password(email, password):
         token = ''
         letters = map(chr, range(97, 123) + range(65,91) + range(49,58))
@@ -24,100 +26,133 @@ def sign_in():
             token += choice(letters)
         success_bool = database_helper.add_logged_in_user(email, token)
         if success_bool:
-            return token + ""
+            return_data = {"success":True, "message":"User successfully signed in.", "data":token}
+            #return token + ""
         else:
-            return 'Already signed in.'
+            return_data = {"success":False, "message":"User already signed in."}
     else:
-        return 'Wrong username or password.'
+        return_data = {"success":False, "message":"Wrong username or password."}
+    return json.dumps(return_data)
 
 #Parameter identifiers should be used when trying to retrieve a specific value.
 #Parameters: email, password, firstname, familyname, gender, city, country
+#Returns: {"success":True/False, "message":Success- or errormessage}
 @app.route('/signup', methods=['POST'])
 def sign_up():
-    email = request.form['email']
-    new_user=dict(email=email, password=hash_pwd(request.form['password']), firstname=request.form['firstname'], familyname=request.form['familyname'], gender=request.form['gender'], city=request.form['city'], country=request.form['country'])
+    email = request.form.get('email')
+    new_user=dict(email=email, password=hash_pwd(request.form.get('password')), firstname=request.form.get('firstname'), familyname=request.form.get('familyname'), gender=request.form.get('gender'), city=request.form.get('city'), country=request.form.get('country'))
     if database_helper.verify_email(email)==False:
         if validate_signup(new_user):
-            database_helper.insert_new_user(new_user)
-            return 'Successfully created a new user.'       
+            if database_helper.insert_new_user(new_user)==True:
+                return_data = {"success":True, "message":"Successfully created a new user."}
+            else:
+                return_data = {"success":False, "message":"An error occured when creating user."}
         else:
-            return 'Formdata not complete.'
+            return_data =  {"success":False, "message":"Formdata not complete."}
     else:
-        return 'User already exists.'
+        return_data =  {"success":False, "message":"User already exists."}
+    return json.dumps(return_data)
 
 #Parameters: token
+#Returns: {"success":True/False, "message":Success- or errormessage}
 @app.route('/signout', methods=['GET'])
 def sign_out():
     token = request.args.get('token')
     if not_none(token)==False:
-        return 'Ah ah ah! You did not use the magic querystring.' 
+        return_data = {"success":False, "message":"Invalid token."}
     if database_helper.check_if_logged_in(token):
         database_helper.remove_logged_in_user(token)
-        return 'Succesfully logged out.'
+        return_data = {"success":True, "message":"Signed out."}
     else:
-        return 'You are not signed in.'
+        return_data = {"success":False, "message":"Invalid token or already signed out."}
+    return json.dumps(return_data)
 
 #Parameters: token, old_password, new_password
-@app.route('/changepassword', methods=['POST'])
+#Returns: {"success":True/False, "message":Success- or errormessage}
+@app.route('/changepassword', methods=['POST', 'GET'])
 def change_password():
     token = request.args.get('token')
     if not_none(token)==False:
-        return 'Ah ah ah! That is not a token, THIS is a token: asA5hG9anfG7HlpzK1.'
+        return_data = {"success":False, "message":"Ah ah ah! That is not a token, THIS is a token: asA5hG9anfG7HlpzK1."}
     if database_helper.check_if_logged_in(token):
         email = database_helper.token_to_email(token)
-        old_pw=request.form['old_password']
-        new_pw=request.form['new_password']
+        old_pw=request.form.get('old_password')
+        new_pw=request.form.get('new_password')
         if not_none(old_pw)==False or not_none(new_pw)==False:
-            return 'Passwords can not be null.'
+            return_data = {"success":False, "message":"Passwords can not be null."}
+            return json.dumps(return_data)
         if old_pw==new_pw:
-            return 'New password must be different from old password.'
+            return_data = {"success":False, "message":"New password must be different from old password."}
+            return json.dumps(return_data)
         if verify_password(email,old_pw):
             database_helper.set_password(email, hash_pwd(new_pw))
-            return 'Password changed.'
-        else: 
-            return 'Wrong password.'
+            return_data = {"success":True, "message":"Password changed."}
+        else:
+            return_data = {"success":False, "message":"Wrong password."}
     else:
-        return 'You are not logged in.'
+        return_data = {"success":False, "message":"You are not logged in."}
+    return json.dumps(return_data)
 
 #Parameters: token
+#Returns: {"success":True/False, "message":Success- or errormessage, "data": {__userdata__} }
+#THESE FUNCTIONS ARE COULD REUSE CODE MUCH BETTER!!
 @app.route('/getuserdatabytoken', methods=['GET'])
 def get_user_data_by_token():
     token = request.args.get('token')
     if not_none(token)==False:
-        return 'Ah ah ah! That is not a token, THIS is a token: asA5hG9anfG7HlpzK1.'
-    if database_helper.check_if_logged_in(token):
+        return_data = {"success":False, "message":"Invalid token."}
+        return json.dumps(return_data)
+    if database_helper.check_if_logged_in(token)==True:
         email = database_helper.token_to_email(token)
-        return get_user_data_by_email(token, email)
+        userdata = get_user_data_by_email(email)
+        if userdata["success"]==True:
+            return_data = {"success":True, "message":"Returning userdata.", "data": userdata["data"]}
+        else:
+            return_data = {"success":False, "message":"User not found."}
     else:
-        return 'No such user.'
+        return_data = {"success":False, "message":"Invalid token or signed out."}
+    return json.dumps(return_data)
 
 #Parameters: token, email
+#Returns: {"success":True/False, "message":Success- or errormessage, "data": {__userdata__} }
+#THESE FUNCTIONS ARE COULD REUSE CODE MUCH BETTER!!
 @app.route('/getuserdatabyemail', methods=['GET'])
 def get_user_data_by_email_route():
     token = request.args.get('token')
     email = request.args.get('email')
     if not_none(token)==False or not_none(email)==False:
-        return 'Invalid querystring.'
-    return get_user_data_by_email(token,email)
-
-def get_user_data_by_email(token, email):
-    if database_helper.check_if_logged_in(token):
-        if verify_email(email)==True:#must write like this in python, just 'verify_email(email):' doesn't work
-            match = database_helper.get_user_data(email)
-            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country'] + ""
+        return_data = {"success":False, "message":"Invalid querystring."}
+        return json.dumps(return_data)
+    if database_helper.check_if_logged_in(token)==True:
+        userdata = get_user_data_by_email(email)
+        if userdata["success"]==True:
+            return_data = {"success":True, "message":"Returning userdata.", "data": userdata["data"]}
         else:
-            return 'No such user.'
+            return_data = {"success":False, "message":"User not found.", "data": userdata["data"]}
     else:
-        return 'You are not signed in.'
+        return_data = {"success":False, "message":"Invalid token or signed out."}
+    return json.dumps(return_data)
+
+#Returns: {"success":True/False (, "data": {userdata}) }
+def get_user_data_by_email(email):
+    if database_helper.verify_email(email)==True:
+        match = database_helper.get_user_data(email)[0]
+        userdata = {"email":match['email'], "firstname":match['firstname'], "familyname":match['familyname'], "gender":match['gender'], "city":match['city'], "country":match['country']}
+        return_data = {"success":True, "data":userdata}
+        #return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country'] + ""
+    else:
+        return_data = {"success":False}
+    return return_data
 
 #Parameters: token
+#Returns: {"success":True/False, "message":"success/error messages", "data":[{"sender":sender, "message":message},..]}
 @app.route('/getusermessagesbytoken', methods=['GET'])
 def get_user_messages_by_token():
     token = request.args.get('token')
-    if not_none(token)==False:
-        return 'Invalid querystring.'
+    if not_none(token)==False or database_helper.check_if_logged_in(token)==False:
+        return json.dumps({"success":False, "message":"Invalid token."})
     email = database_helper.token_to_email(token)
-    return get_user_messages_by_email(token, email)
+    return json.dumps(get_user_messages_by_email(token, email))
 
 #Parameters: token, email
 @app.route('/getusermessagesbyemail', methods=['GET'])
@@ -125,19 +160,20 @@ def get_user_messages_by_email_route():
     token = request.args.get('token')
     email = request.args.get('email')
     if not_none(token)==False or not_none(email)==False:
-        return 'Invalid querystring.'
-    return get_user_messages_by_email(token, email)
+        return json.dumps({"success":False, "message":"Invalid token or email."})
+    return json.dumps(get_user_messages_by_email(token, email))
 
 def get_user_messages_by_email(token, email):
     if database_helper.check_if_logged_in(token):
         if database_helper.verify_email(email):
             matches = database_helper.get_user_messages(email)
-            result = stringify_messages(matches)
-            return result
+            return {"success":True, "message":"Returning messages.", "data":matches}
+            #result = stringify_messages(matches) used in lab2
+            #return result
         else:
-            return 'User not found.'
+            return {"success":False, "message":"User not found."}
     else:
-        return 'Must be logged in to retrieve messages.'
+        return {"success":False, "message":"Must be logged in to retrieve messages."}
 
 
 #Parameters: token, message, email
@@ -147,19 +183,20 @@ def post_message():
     message = request.form.get('message')
     email = request.form.get('email')
     if not_none(token)==False or not_none(email)==False:
-        return 'Invalid querystring.'
+        return json.dumps({"success":False, "message":"Invalid token or email."})
     if database_helper.check_if_logged_in(token):
         sender = database_helper.token_to_email(token)
         if not_none(message):
             if database_helper.verify_email(email):
                 database_helper.insert_new_message(sender, message, email)
-                return 'Message has been sent.'
+                return_data = {"success":True, "message":"Message has been sent."}
             else:
-                return 'No such recipient.'
+                return_data = {"success":False, "message":"No such recipient."}
         else:
-            return 'Message must not be empty.'
+            return_data = {"success":False, "message":"Message must not be empty."}
     else:
-        return 'Sender must be logged in.'
+        return_data = {"success":False, "message":"Sender must be logged in."}
+    return json.dumps(return_data)
 
 #Test functions for trying out single database_helper functions.
 @app.route('/verify/<email>')
