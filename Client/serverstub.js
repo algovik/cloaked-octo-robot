@@ -103,20 +103,34 @@ serverstub.getUserDataByEmail = function(token, email){
     return response;
 };
 serverstub.getUserMessagesByToken = function(token){
-    var email = serverstub.tokenToEmail(token);
-    return serverstub.getUserMessagesByEmail(token,email);
+    var con = new XMLHttpRequest();
+    var response;
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
+        }
+    }
+
+    con.open("GET", "/getuserdatabyemail?token=" + token, true);
+    con.send();
+
+    return response;
 };
 serverstub.getUserMessagesByEmail = function(token, email){
-    if (loggedInUsers[token] != null){
-        if (users[email] != null) {
-            var match = serverstub.copyUser(users[email]).messages;
-            return {"success": true, "message": "User messages retrieved.", "data": match};
-        } else {
-            return {"success": false, "message": "No such user."};
+    var con = new XMLHttpRequest();
+    var response;
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
         }
-    } else {
-        return {"success": false, "message": "You are not signed in."};
     }
+
+    con.open("GET", "/getuserdatabyemail?token=" + token + "email=" + email, true);
+    con.send();
+
+    return response;
 };
 serverstub.signOut = function(token){
     
