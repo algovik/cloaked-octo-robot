@@ -118,15 +118,6 @@ def get_user_data_by_token():
 #THESE FUNCTIONS ARE COULD REUSE CODE MUCH BETTER!!
 @app.route('/getuserdatabyemail', methods=['GET'])
 def get_user_data_by_email_route():
-<<<<<<< HEAD
-    return get_user_data_by_email(request.form['token'],request.form['email'])
-
-def get_user_data_by_email(token, email):
-    if database_helper.check_if_logged_in(token):
-        if verify_email(email):
-            match = database_helper.get_user_data(email)
-            return match[0]['email'] + "|" + match[0]['firstname'] + "|" + match[0]['familyname'] + "|" + match[0]['gender'] + "|" + match[0]['city'] + "|" + match[0]['country']
-=======
     token = request.args.get('token')
     email = request.args.get('email')
     if not_none(token)==False or not_none(email)==False:
@@ -136,7 +127,6 @@ def get_user_data_by_email(token, email):
         userdata = get_user_data_by_email(email)
         if userdata["success"]==True:
             return_data = {"success":True, "message":"Returning userdata.", "data": userdata["data"]}
->>>>>>> 91daf3e32fdbcc25530021a225610a7781bd0b86
         else:
             return_data = {"success":False, "message":"User not found.", "data": userdata["data"]}
     else:
