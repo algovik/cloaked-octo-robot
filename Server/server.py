@@ -115,7 +115,7 @@ def get_user_data_by_token():
 
 #Parameters: token, email
 #Returns: {"success":True/False, "message":Success- or errormessage, "data": {__userdata__} }
-#THESE FUNCTIONS ARE COULD REUSE CODE MUCH BETTER!!
+#THESE FUNCTIONS COULD REUSE CODE MUCH BETTER!!
 @app.route('/getuserdatabyemail', methods=['GET'])
 def get_user_data_by_email_route():
     token = request.args.get('token')
@@ -145,7 +145,7 @@ def get_user_data_by_email(email):
     return return_data
 
 #Parameters: token
-#Returns: {"success":True/False, "message":"success/error messages", "data":[{"sender":sender, "message":message},..]}
+#Returns: {"success":True/False, "message":"success/error messages", "data":[{"sender":sender, "content":message content},..]}
 @app.route('/getusermessagesbytoken', methods=['GET'])
 def get_user_messages_by_token():
     token = request.args.get('token')

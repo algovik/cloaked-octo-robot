@@ -90,20 +90,36 @@ serverstub.getUserDataByEmail = function(token, email){
     }
 };
 serverstub.getUserMessagesByToken = function(token){
-    var email = serverstub.tokenToEmail(token);
-    return serverstub.getUserMessagesByEmail(token,email);
+    var con = new XMLHttpRequest();
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            var response = JSON.parse(event.target.responseText);
+            // response = {"success":bool, "message":message, "data"::[{"sender":sender, "content":message content},..]}
+            // response["data"][i]["message"] would return the i:th message content
+        }
+    }
+    con.open("GET", "getusermessagesbytoken?token=" + token, true);
+    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    con.send();
+
+    return response;
 };
 serverstub.getUserMessagesByEmail = function(token, email){
-    if (loggedInUsers[token] != null){
-        if (users[email] != null) {
-            var match = serverstub.copyUser(users[email]).messages;
-            return {"success": true, "message": "User messages retrieved.", "data": match};
-        } else {
-            return {"success": false, "message": "No such user."};
+    var con = new XMLHttpRequest();
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            var response = JSON.parse(event.target.responseText);
+            // response = {"success":bool, "message":message, "data"::[{"sender":sender, "content":message content},..]}
+            // response["data"][i]["message"] would return the i:th message content
         }
-    } else {
-        return {"success": false, "message": "You are not signed in."};
     }
+    con.open("GET", "getusermessagesbytoken?token=" + token +"&email=" + email, true);
+    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    con.send();
+
+    return response;
 };
 serverstub.signOut = function(token){
     if (loggedInUsers[token] != undefined){
