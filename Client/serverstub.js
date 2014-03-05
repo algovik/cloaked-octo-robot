@@ -28,42 +28,41 @@ serverstub.copyUser = function(user){
     return JSON.parse(JSON.stringify(user));
 };
 
-
 // Public methods
 serverstub.signIn = function(email, password){
-    if(users[email] != null && users[email].password == password){
-        var letters = "abcdefghiklmnopqrstuvwwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        var token = "";
-        for (var i = 0 ; i < 36 ; ++i) {
-            token += letters[Math.floor(Math.random() * letters.length)];
+    
+    var con = new XMLHttpRequest();
+    var repsonse;
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
         }
-        loggedInUsers[token] = email;
-        serverstub.persistLoggedInUsers();
-        return {"success": true, "message": "Successfully signed in.", "data": token};
-    } else {
-        return {"success": false, "message": "Wrong username or password."};
     }
+
+    con.open("POST", "/signin", true);
+    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    con.send("email=" + email + "&password=" + password);
+
+    return response;
 };
 
 serverstub.postMessage = function(token, content, toEmail){
-    var fromEmail = serverstub.tokenToEmail(token);
-    if (fromEmail != null) {
-        if (toEmail == null) {
-            toEmail = fromEmail;
-        }
-        if(users[toEmail] != null){
-            var recipient = users[toEmail];
-            var message = {"writer": fromEmail, "content": content};
-            recipient.messages.unshift(message);
-            serverstub.persistUsers();
-            return {"success": true, "message": "Message posted"};
-        } else {
-            return {"success": false, "message": "No such user."};
+      
+    var con = new XMLHttpRequest();
+    var repsonse;
 
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
         }
-    } else {
-        return {"success": false, "message": "You are not signed in."};
     }
+
+    con.open("POST", "/postmessage", true);
+    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    con.send("token=" + token + "&message=" + content + "&email=" + toEmail);
+
+    return response;
 };
 
 /*
@@ -71,17 +70,47 @@ Returns an object containing the field email, firstname, 
 familyname, gender, city and country. 
 */
 serverstub.getUserDataByToken = function(token){
-    var email = serverstub.tokenToEmail(token);
-    return serverstub.getUserDataByEmail(token, email);
+    
+    var con = new XMLHttpRequest();
+    var response;
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
+        }
+    }
+
+    con.open("GET", "/getuserdatabytoken?token=" + token, true);
+    con.send(null);
+
+    return response;
 };
 
 serverstub.getUserDataByEmail = function(token, email){
+    
+    var con = new XMLHttpRequest();
+    var response;
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
+        }
+    }
+
+    con.open("GET", "/getuserdatabyemail?token=" + token + "&email=" + email, true);
+    con.send(null);
+
+    return response;
+};
+serverstub.getUserMessagesByToken = function(token){
+    var email = serverstub.tokenToEmail(token);
+    return serverstub.getUserMessagesByEmail(token,email);
+};
+serverstub.getUserMessagesByEmail = function(token, email){
     if (loggedInUsers[token] != null){
         if (users[email] != null) {
-            var match = serverstub.copyUser(users[email]);
-            delete match.messages;
-            delete match.password;
-            return {"success": true, "message": "User data retrieved.", "data": match};
+            var match = serverstub.copyUser(users[email]).messages;
+            return {"success": true, "message": "User messages retrieved.", "data": match};
         } else {
             return {"success": false, "message": "No such user."};
         }
@@ -89,80 +118,61 @@ serverstub.getUserDataByEmail = function(token, email){
         return {"success": false, "message": "You are not signed in."};
     }
 };
-serverstub.getUserMessagesByToken = function(token){
-    var con = new XMLHttpRequest();
-
-    con.onreadystatechange=function(event){
-        if (event.readyState==4 && event.status==200){
-            var response = JSON.parse(event.target.responseText);
-            // response = {"success":bool, "message":message, "data"::[{"sender":sender, "content":message content},..]}
-            // response["data"][i]["message"] would return the i:th message content
-        }
-    }
-    con.open("GET", "getusermessagesbytoken?token=" + token, true);
-    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    con.send();
-
-    return response;
-};
-serverstub.getUserMessagesByEmail = function(token, email){
-    var con = new XMLHttpRequest();
-
-    con.onreadystatechange=function(event){
-        if (event.readyState==4 && event.status==200){
-            var response = JSON.parse(event.target.responseText);
-            // response = {"success":bool, "message":message, "data"::[{"sender":sender, "content":message content},..]}
-            // response["data"][i]["message"] would return the i:th message content
-        }
-    }
-    con.open("GET", "getusermessagesbytoken?token=" + token +"&email=" + email, true);
-    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    con.send();
-
-    return response;
-};
 serverstub.signOut = function(token){
-    if (loggedInUsers[token] != undefined){
-        delete loggedInUsers[token];
-        serverstub.persistLoggedInUsers();
-        return {"success": true, "message": "Successfully signed out."};
-    } else {
-        return {"success": false, "message": "You are not signed in."};
-    }
-};
-serverstub.signUp = function(formData){ // {email, password, firstname, familyname, gender, city, country}
-    if (users[formData.email] === undefined){
-        if(formData.email != undefined && formData.password != undefined && formData.firstname != undefined && formData.familyname != undefined && formData.gender != undefined && formData.city != undefined && formData.country != undefined){
-            var user = {"email": formData.email,
-                "password": formData.password,
-                "firstname": formData.firstname,
-                "familyname": formData.familyname,
-                "gender": formData.gender,
-                "city": formData.city,
-                "country": formData.country,
-                "messages": []};
-            users[formData.email] = user;
-            serverstub.persistUsers();
-            return {"success": true, "message": "Successfully created a new user."};
-        }else{
-            return {"success": false, "message": "Formdata not complete."};
-        }
+    
+    var con = new XMLHttpRequest();
+    var response;
 
-    } else {
-        return {"success": false, "message": "User already exists."};
-    }
-};
-serverstub.changePassword = function(token, oldPassword, newPassword){
-    if (loggedInUsers[token] != null){
-        var email = serverstub.tokenToEmail(token);
-        if (users[email].password == oldPassword){
-            users[email].password = newPassword;
-            serverstub.persistUsers();
-            return {"success": true, "message": "Password changed."};
-        } else {
-            return {"success": false, "message": "Wrong password."};
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
         }
-    } else {
-        return {"success": false, "message": "You are not logged in."};
     }
+
+    con.open("GET", "/signout?token=" + token, true);
+    con.send(null);
+
+    return response;
+};
+
+serverstub.signUp = function(formData){ // {email, password, firstname, familyname, gender, city, country}
+    
+    var con = new XMLHttpRequest();
+    var repsonse;
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
+        }
+    }
+
+    con.open("POST", "/signup", true);
+    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    con.send("email=" + formData.email +
+            "&password=" + formData.password +
+            "&firstname=" + formData.firstname +
+            "&familyname=" + formData.familyname +
+            "&gender=" + formData.gender +
+            "&city=" + formData.city +
+            "&country=" + formData.country);
+
+    return response;
+};
+
+serverstub.changePassword = function(token, oldPassword, newPassword){
+    
+    var con = new XMLHttpRequest();
+    var repsonse;
+
+    con.onreadystatechange=function(event){
+        if (event.readyState==4 && event.status==200){
+            response = JSON.parse(event.target.responseText);
+        }
+    }
+
+    con.open("POST", "/changepassword?token=" + token, true);
+    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    con.send("old_password=" + oldPassword + "&new_password=" + newPassword);
+
+    return response;
 };
