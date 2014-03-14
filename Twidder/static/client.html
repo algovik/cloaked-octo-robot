@@ -67,7 +67,7 @@
 							</div>
 							<div id="wallContainer" class="wallContainer">
 								<div id="postToWall" class="postToWall">
-									<form name="wallInput" onsubmit="return sendToWall(this, serverstub.tokenToEmail(localStorage.token))">
+									<form name="wallInput" onsubmit="return sendToWall(this, 'algovik@gmail.com'); return false;">
 										<input type="text" id="wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 										<input type="Submit" id="submitWall" class="dotBorder" value="Post">
 									</form>
@@ -102,7 +102,7 @@
 
 								<div id="browse_wallContainer" class="wallContainer">
 									<div id="browse_postToWall" class="postToWall">
-										<form name="browse_wallInput" onsubmit="return sendToWall(this, globalBrowsedEmail)">
+										<form name="browse_wallInput" onsubmit="return sendToWall(this, globalBrowsedEmail); return false;">
 											<input type="text" id="browse_wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
 											<input type="Submit" id="browse_submitWall" class="dotBorder" value="Post">
 										</form>

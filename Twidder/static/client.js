@@ -2,7 +2,7 @@ function loadView(){
 	if(localStorage.token){
 		document.getElementById("displayView").innerHTML = document.getElementById("profileView").innerHTML; //Shows profileView when user already has a token.
 		
-		var email = null;
+		// var globalUserEmail = null;
 		var globalBrowsedEmail = null;
 
 		var con = new XMLHttpRequest();
@@ -10,8 +10,9 @@ function loadView(){
     	con.onreadystatechange=function(event){
 	        if (event.target.readyState==4 && event.target.status==200){
 	            serverResponse = JSON.parse(event.target.responseText);
-	            email = serverResponse["data"];
-	            loadPersonalData(email, true);
+	            localStorage.globalUserEmail = serverResponse["data"];
+	            console.log(localStorage.globalUserEmail);
+	            loadPersonalData(localStorage.globalUserEmail, true);
 	        }
 	    }
 
@@ -58,6 +59,8 @@ function logout(){
 	// result = serverstub.signOut(localStorage.token);
 }
 
+
+//Working?
 function changePasswordClient(formVar){
 	var oldPassword = formVar["oldPassword"].value;
 	var newPassword = formVar["newPasswordChange"].value;
@@ -231,7 +234,6 @@ function getNameByEmail(email){
 function loadPersonalData(email, isCurrUser){
 	// var personalData=null;
 	var token = localStorage.token;
-
 	var con = new XMLHttpRequest();
 	var response;
 
@@ -243,7 +245,29 @@ function loadPersonalData(email, isCurrUser){
 	        document.getElementById(prefix+"pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
 			document.getElementById(prefix+"pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
 			document.getElementById(prefix+"pdemail").innerHTML=personalData["email"];
-			// listAllMessages(email, isCurrUser);
+			listAllMessages(email, isCurrUser);
+
+/* CONFLICT
+	var prefix="";
+
+
+	if(isCurrUser){
+		// personalData = serverstub.getUserDataByToken(token)["data"];
+		prefix = "";
+
+		var con = new XMLHttpRequest();
+
+	    con.onreadystatechange=function(event){
+	        if (event.target.readyState==4 && event.target.status==200){
+	            response = JSON.parse(event.target.responseText);
+	            personalData = response["data"];
+	            document.getElementById(prefix+"pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
+				document.getElementById(prefix+"pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
+				document.getElementById(prefix+"pdemail").innerHTML=personalData["email"];
+
+				listAllMessages(email, isCurrUser);
+	        }
+*/
 	    }
 	}
 
@@ -399,11 +423,34 @@ function validateSignup(formVar){
 Will use the serverstub to store a message in the specified users wall storage with the attributes fromUser and message.
 */
 function sendToWall(formVar, toUserEmail){
-	serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, toUserEmail);
-	refreshWall(false);
-	formVar["wallInputField"].value = "";
-	return false; //serverResponse["success"];
 
+	var con = new XMLHttpRequest();
+
+    con.onreadystatechange=function(event){
+        if (event.target.readyState==4 && event.target.status==200){
+            response = JSON.parse(event.target.responseText);
+            alert(response["message"]);
+			formVar["wallInputField"].value = "";
+
+			if(toUserEmail == localStorage.globalUserEmail){
+				refreshWall(true);
+			}
+			else{
+				refreshWall(false);
+			}
+        }
+    }
+
+    con.open("POST", "/postmessage", true);
+    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    con.send("token=" + localStorage.token + "&message=" + formVar["wallInputField"].value + "&email=" + toUserEmail);
+
+
+	// serverResponse = serverstub.postMessage(localStorage.token, formVar["wallInputField"].value, toUserEmail);
+	// refreshWall(false);
+	// formVar["wallInputField"].value = "";
+	
+	return false; //serverResponse["success"];
 }
 
 /*
@@ -422,18 +469,35 @@ Called when the client wants to view all messages on their wall.
 */
 
 function listAllMessages(email, isCurrUser){
-	response = retrieveMessages(email);
-	messages = response["data"];
+	// response = retrieveMessages(email);
 
-	if(response["success"]==true){
-		for (var i=0; i < messages.length; i++){
-			addMessageToWall(messages[i], isCurrUser);
+	var con = new XMLHttpRequest();
+
+    con.onreadystatechange=function(event){
+        if (event.target.readyState==4 && event.target.status==200){
+            serverResponse = JSON.parse(event.target.responseText);
+            messages = serverResponse["data"];
+			if(serverResponse["success"]==true){
+				for (var i=messages.length-1; i >= 0; i--){
+					addMessageToWall(messages[i], isCurrUser);
+				}
+			}
 		}
-		return true;
 	}
-	else{
-		return false;
-	}
+    con.open("GET", "/getusermessagesbyemail?token=" + localStorage.token + "&email=" + email, true);
+    con.send();
+
+	// messages = response["data"];
+
+	// if(response["success"]==true){
+	// 	for (var i=0; i < messages.length; i++){
+	// 		addMessageToWall(messages[i], isCurrUser);
+	// 	}
+	// 	return true;
+	// }
+	// else{
+	// 	return false;
+	// }
 }
 
 /*
@@ -442,14 +506,15 @@ the definition of a message defined on the server-side.
 */
 function addMessageToWall(messageVar, isCurrUser){
 	var messageElement = document.createElement("label");
-	var userEmail = serverstub.tokenToEmail(localStorage.token);
+	
+	// var userEmail = serverstub.tokenToEmail(localStorage.token);
 	var prefix="";
 
-	if(messageVar["writer"]==userEmail){
+	if(messageVar["writer"]==localStorage.globalUserEmail){
 		messageElement.innerHTML="<span class='msgPoster'>Me</span>: "+messageVar["content"];
 	}
 	else{
-		messageElement.innerHTML="<span class='msgPoster'>"+getNameByEmail(messageVar["writer"])+"</span>: "+messageVar["content"];
+		messageElement.innerHTML="<span class='msgPoster'>"+messageVar["sender"]+"</span>: "+messageVar["content"];
 	}
 
 	if(!isCurrUser){
@@ -480,7 +545,8 @@ function refreshWall(isCurrUser){
 	var email;
 	clearWall(isCurrUser);
 	if(isCurrUser){
-		email=serverstub.tokenToEmail(localStorage.token);
+		// email=serverstub.tokenToEmail(localStorage.token);
+		email=localStorage.globalUserEmail;
 	}
 	else{
 		email=globalBrowsedEmail;

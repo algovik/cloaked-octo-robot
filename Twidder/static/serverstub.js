@@ -130,7 +130,7 @@ serverstub.getUserMessagesByToken = function(token){
         }
     }
 
-    con.open("GET", "/getuserdatabyemail?token=" + token, true);
+    con.open("GET", "/getusermessagesbytoken?token=" + token, true);
     con.send();
 
     return response;
@@ -145,7 +145,7 @@ serverstub.getUserMessagesByEmail = function(token, email){
         }
     }
 
-    con.open("GET", "/getuserdatabyemail?token=" + token + "email=" + email, true);
+    con.open("GET", "/getusermessagesbyemail?token=" + token + "email=" + email, true);
     con.send();
 
     return response;
