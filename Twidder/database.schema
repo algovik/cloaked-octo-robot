@@ -1,0 +1,24 @@
+CREATE TABLE Users(
+Id INT AUTO INCREMENT,
+Email VARCHAR(254),
+Password VARCHAR(255),
+Firstname VARCHAR(255),
+Familyname VARCHAR(255),
+Gender VARCHAR(10),
+City VARCHAR(255),
+Country VARCHAR(255),
+PRIMARY KEY(Email)
+);
+
+CREATE TABLE LoggedInUsers(
+Email VARCHAR(254),
+Token VARCHAR(36),
+PRIMARY KEY(Email)
+);
+
+CREATE TABLE Messages(
+Id INT AUTO INCREMENT,
+Sender VARCHAR(254),
+Recipient VARCHAR(254),
+Content VARCHAR(500)
+);

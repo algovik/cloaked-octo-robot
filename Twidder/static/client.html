@@ -1,0 +1,141 @@
+<html>
+<!--  HTML Code Convention
+	* Order of element attributes (when applicable): type, id, class, name, value, others, 'js events'
+-->
+
+
+	<head> <title>Twidder</title>
+	<link rel="icon" type='image/x-icon' href='favicon.ico'>
+		<link href="client.css" type="text/css" rel="stylesheet">
+		<script src="client.js" type="text/javascript"></script>
+		<script src="serverstub.js" type="text/javascript"></script>
+		<script type="text/view" id="welcomeView">
+			<img src="img/logo.png" id="welcomeLogo" class="flipImg">
+			<div id="welcomeMain">
+				<div id="logoBox" class="dotBorder">
+					<img src="img/wimage.png">
+				</div>
+				<div id="loginBox" class="dotBorder">
+					<form id="loginForm" name="login" onsubmit="return validateLogin(this);return false;">
+						<label for="username">Username:</label>
+						<input type="text" id="username" class="dotBorder" name="username" onkeypress="changeBorderColor(this, 1); removeLoginMsg()">
+						<label for="password">Password:</label>
+						<input type="password" id="password" class="dotBorder" name="password" onkeypress="changeBorderColor(this, 1); removeLoginMsg()">
+						<label id="msgLogin"></label>
+						<input type="Submit" class="dotBorder" value="Login">
+					</form>
+				</div>
+				<div id="signupBox" class="dotBorder">
+					<h4 class="centerText">Sign Up Here!</h4>
+					<form name="signup" onsubmit="return validateSignup(this); return false;">
+						<label for="firstName">First Name:</label><input type="text" id="firstName" class="dotBorder signupInput" name="firstName" onkeypress="removeSuccessMessageAndBorder(this)">
+						<label for="familyName">Family Name:</label><input type="text" id="familyName" class="dotBorder signupInput" name="familyName" onkeypress="changeBorderColor(this, 1)">
+						<label for="gender">Gender:</label><select id="gender" class="dotBorder signupInput" name="gender">
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+							<option value="other">Other</option>
+						</select>
+						<label for="city">City:</label><input type="text" id="city" class="dotBorder signupInput" name="city" onkeypress="changeBorderColor(this, 1)">
+						<label for="country">Country:</label><input type="text" id="country" class="dotBorder signupInput" name="country" onkeypress="changeBorderColor(this, 1)">
+						<label for="email">Email:</label><input type="text" id="email" class="dotBorder signupInput" name="email" onkeypress="removeErrorMessageAndBorder(this)">
+						<label for="newPassword">Password:</label><input type="password" id="newPassword" class="dotBorder signupInput" name="newPassword" onkeypress="changeBorderColor(this, 1)">
+						<label for="confirmPassword">Confirm Pwd:</label><input type="password" id="confirmPassword" class="dotBorder signupInput" name="confirmPassword" onkeypress="changeBorderColor(this, 1)">
+						<input type="Submit" class="dotBorder" value="Signup" id="submit">
+					</form>
+					<label id="signupMsg"></label>
+				</div>
+			</div>
+		</script>
+		<script type="text/view" id="profileView">
+			<div id="ProfileMain">
+				<div id="tabs">
+				<a><img src="img/logo.png" id="logoImg" onclick="tab('home')"></a>
+				<ul>
+					<li id="li_home" class="active" onclick="tab('home')"><a>Home</a></li>
+					<li id="li_browse" onclick="tab('browse')"><a>Browse</a></li>
+					<li id="li_account" onclick="tab('account')"><a>Account</a></li>
+					<li id="logout" onclick="confirmLogout()"><a>Logout</a></li>
+				</ul>
+					<div id="contentArea" class="dotBorder">
+
+						<!-- HOME TAB -->
+						<div id="home">
+							<div id="personalInfo" class="dotBorder personalInfo">
+								<label id="pdname" class="pdname"></label>
+								<label id="pdlocation"></label>
+								<label id="pdemail"></label>
+							</div>
+							<div id="wallContainer" class="wallContainer">
+								<div id="postToWall" class="postToWall">
+									<form name="wallInput" onsubmit="return sendToWall(this, serverstub.tokenToEmail(localStorage.token))">
+										<input type="text" id="wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
+										<input type="Submit" id="submitWall" class="dotBorder" value="Post">
+									</form>
+									<button id="refresh" class="dotBorder refresh" onclick="refreshWall(true)"><img src="img/refreshbutton.png"></button>
+								</div>
+								<div id="wall" class="dotBorder wall">
+									<div id="wallMessages" class="wallMessages">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- BROWSE TAB -->
+						<div id="browse" style="display:none">
+							<div id="browseSearch">
+								<h4>Search for friends by entering an email address below.</h4>
+								<form name="searchEmail" onsubmit="return searchUser(this); return false;">
+									<input type="text" id="searchEmailField" class="dotBorder" name="searchEmailField">
+									<input type="Submit" id="searchEmailButton" class="dotBorder" value="Search">
+								</form>
+							</div>
+
+								<!-- the browsed user page -->
+							<div id="browseResultMessages"></div>
+							<div id="browseResult" style="display:none">
+							<!-- OBS! Display:none -->
+								<div id="browse_personalInfo" class="dotBorder personalInfo">
+									<label id="browse_pdname" class="pdname"></label>
+									<label id="browse_pdlocation"></label>
+									<label id="browse_pdemail"></label>
+								</div>
+
+								<div id="browse_wallContainer" class="wallContainer">
+									<div id="browse_postToWall" class="postToWall">
+										<form name="browse_wallInput" onsubmit="return sendToWall(this, globalBrowsedEmail)">
+											<input type="text" id="browse_wallInputField" name="wallInputField" class="dotBorder" placeholder="Share your thoughts">
+											<input type="Submit" id="browse_submitWall" class="dotBorder" value="Post">
+										</form>
+										<button id="browse_refresh" class="dotBorder refresh" onclick="refreshWall(false)"><img src="img/refreshbutton.png"></button>
+									</div>
+									<div id="browse_wall" class="dotBorder wall">
+										<div id="browse_wallMessages" class="wallMessages"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- ACCOUNT TAB -->
+						<div id="account" style="display:none">
+							<div id="changePasswordBox" class="dotBorder">
+								<h4>Change Password</h4>
+								<form name="changePassword" onsubmit="return changePasswordClient(this); return false;">
+									<label for="oldPassword">Old Password:</label><input type="password" id="oldPassword" class="dotBorder">
+									<label for="newPasswordChange">New Password:</label><input type="password" id="newPasswordChange" class="dotBorder">
+									<input type="submit" value="Change Password" class="dotBorder">
+								</form>
+								<label id="msgChangePassword"></label>
+							</div>
+						</div>
+					</div
+				</div>
+			</div>
+		</script>
+	</head>
+	<body>		
+		<div id="displayView"></div>
+		<script type="text/javascript"> //Script to fill the page on load.
+			window.onload = loadView;			
+		</script>
+	</body>
+</html>
