@@ -11,7 +11,6 @@ function loadView(){
 	        if (event.target.readyState==4 && event.target.status==200){
 	            serverResponse = JSON.parse(event.target.responseText);
 	            localStorage.globalUserEmail = serverResponse["data"];
-	            console.log(localStorage.globalUserEmail);
 	            loadPersonalData(localStorage.globalUserEmail, true);
 	        }
 	    }
@@ -102,20 +101,68 @@ function tab(tab){
 	document.getElementById("li_"+tab).setAttribute("class","active");
 }
 
+// function searchUser(formVar){
+// 	var email = formVar["searchEmailField"].value;
+// 	var result = serverstub.getUserDataByEmail(localStorage.token,email);
+// 	clearBrowse();
+// 	document.getElementById("browseResultMessages").innerHTML= "";
+// 	document.getElementById("browseResult").style.display="none";
+// 	if(result["success"]){
+// 		loadPersonalData(email, false);
+// 		globalBrowsedEmail=email;
+// 		document.getElementById("browseResult").style.display="block";
+// 	} else {
+// 		document.getElementById("browseResultMessages").innerHTML = result["message"];
+// 	}
+// 	return false;
+// }
+
+
 function searchUser(formVar){
 	var email = formVar["searchEmailField"].value;
-	var result = serverstub.getUserDataByEmail(localStorage.token,email);
+	// var result = serverstub.getUserDataByEmail(localStorage.token,email);
 	clearBrowse();
 	document.getElementById("browseResultMessages").innerHTML= "";
 	document.getElementById("browseResult").style.display="none";
-	if(result["success"]){
+ 
+	loadSearchUser(email);
+	/*if(result["success"]){
 		loadPersonalData(email, false);
 		globalBrowsedEmail=email;
 		document.getElementById("browseResult").style.display="block";
 	} else {
 		document.getElementById("browseResultMessages").innerHTML = result["message"];
-	}
+	}*/
 	return false;
+}
+ 
+function loadSearchUser(email){
+	var token = localStorage.token;
+	var prefix="browse_";
+ 
+	var con = new XMLHttpRequest();
+ 
+	con.onreadystatechange=function(event){
+	    if (event.target.readyState==4 && event.target.status==200){
+	        response = JSON.parse(event.target.responseText);
+	        var success=response["success"];
+	        var personalData = response["data"];
+	        var message=response["message"];
+	        if(success){
+	        	globalBrowsedEmail=email;
+	        	document.getElementById(prefix+"pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
+				document.getElementById(prefix+"pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
+				document.getElementById(prefix+"pdemail").innerHTML=personalData["email"];
+				document.getElementById("browseResult").style.display="block";
+				listAllMessages(email, false);
+	        }
+	        else{
+	        	document.getElementById("browseResultMessages").innerHTML = message;
+	        }
+	    }
+	}
+	con.open("GET", "/getuserdatabyemail?token=" + token+"&email=" + email, true);
+	con.send(null);
 }
 
 function clearBrowse(){
@@ -170,15 +217,10 @@ function validateLogin(formVar){
 	        }
 	    }
 
-	    console.log("before");
-
 	    con.open("POST", "/signin", true);
 	    con.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	    con.send("email=" + username + "&password=" + password);
 	    
-	    console.log("after");
-
-
 	    //-----Gamla koden-----
 		// serverstub.signIn(username, password);
 
@@ -225,8 +267,6 @@ function loadPersonalData(email, isCurrUser){
 
 	    con.open("GET", "/getuserdatabytoken?token=" + token, true);
 	    con.send(null);
-
-
 	}
 	else{
 		personalData = serverstub.getUserDataByEmail(token, email)["data"];
@@ -316,7 +356,6 @@ function validateSignup(formVar){
 	    con.onreadystatechange=function(event){
 	        if (event.target.readyState==4 && event.target.status==200){
 	            serverResponse = JSON.parse(event.target.responseText);
-	            console.log(serverResponse);
 	            var successBool=serverResponse["success"];
 
 				if(!successBool){ //if user already exists
@@ -463,7 +502,7 @@ function addMessageToWall(messageVar, isCurrUser){
 		messageElement.innerHTML="<span class='msgPoster'>Me</span>: "+messageVar["content"];
 	}
 	else{
-		messageElement.innerHTML="<span class='msgPoster'>"+messageVar["sender"]+"</span>: "+messageVar["content"];
+		messageElement.innerHTML="<span class='msgPoster'>"+messageVar["sender"]+"</span>: "+messageVar["content"]; // getNameByEmail(messageVar["sender"])
 	}
 
 	if(!isCurrUser){
@@ -496,11 +535,13 @@ function refreshWall(isCurrUser){
 	if(isCurrUser){
 		// email=serverstub.tokenToEmail(localStorage.token);
 		email=localStorage.globalUserEmail;
+		loadPersonalData(email,isCurrUser);
 	}
 	else{
 		email=globalBrowsedEmail;
+		loadSearchUser(email);
 	}
-	loadPersonalData(email, isCurrUser);
+	// loadPersonalData(email, isCurrUser);
 	return false;
 }
 

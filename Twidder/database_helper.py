@@ -101,7 +101,7 @@ def get_user_data(email):
 def get_user_messages(email):
     db = get_db()
     cur = db.execute("SELECT Sender, Content FROM Messages WHERE Recipient='" + email + "'")
-    result = [dict(sender=row[0], content=row[1]) for row in cur.fetchall()]
+    result = [dict(sender=email_to_username(row[0]), content=row[1]) for row in cur.fetchall()]
     return result
 
 #sender and recipient parameters are the corresponding email addresses
@@ -110,3 +110,10 @@ def insert_new_message(sender, message, recipient):
     cur = db.execute("INSERT INTO Messages (Sender, Recipient, Content) VALUES (?,?,?)", (sender, recipient, message))
     db.commit()
     #this should return something later, catch exceptions and return error code ot sumtin
+
+def email_to_username(email):
+    db = get_db()
+    cur = db.execute("SELECT Firstname, Familyname FROM Users WHERE Email='" + email + "'")
+    result = cur.fetchone()
+    return result[0] + " " + result[1]
+
