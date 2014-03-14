@@ -124,7 +124,7 @@ function searchUser(formVar){
 	clearBrowse();
 	document.getElementById("browseResultMessages").innerHTML= "";
 	document.getElementById("browseResult").style.display="none";
- 
+
 	loadSearchUser(email);
 	/*if(result["success"]){
 		loadPersonalData(email, false);
@@ -164,6 +164,36 @@ function loadSearchUser(email){
 	con.open("GET", "/getuserdatabyemail?token=" + token+"&email=" + email, true);
 	con.send(null);
 }
+
+function loadSearchUser(email){
+	var token = localStorage.token;
+	var prefix="browse_";
+
+	var con = new XMLHttpRequest();
+
+	con.onreadystatechange=function(event){
+	    if (event.target.readyState==4 && event.target.status==200){
+	        response = JSON.parse(event.target.responseText);
+	        var success=response["success"];
+	        var personalData = response["data"];
+	        var message=response["message"];
+	        if(success){
+	        	globalBrowsedEmail=email;
+	        	document.getElementById(prefix+"pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
+				document.getElementById(prefix+"pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
+				document.getElementById(prefix+"pdemail").innerHTML=personalData["email"];
+				document.getElementById("browseResult").style.display="block";
+				listAllMessages(email, isCurrUser);
+	        }
+	        else{
+	        	document.getElementById("browseResultMessages").innerHTML = message;
+	        }
+	    }
+	}
+	con.open("GET", "/getuserdatabyemail?token=" + token+"&email=" + email, true);
+	con.send(null);
+}
+
 
 function clearBrowse(){
 	clearWall(false);
@@ -244,6 +274,20 @@ function getNameByEmail(email){
 function loadPersonalData(email, isCurrUser){
 	// var personalData=null;
 	var token = localStorage.token;
+	var con = new XMLHttpRequest();
+	var response;
+
+	con.onreadystatechange=function(event){
+	    if (event.target.readyState==4 && event.target.status==200){
+	        response = JSON.parse(event.target.responseText);
+
+	        personalData = response["data"];
+	        document.getElementById(prefix+"pdname").innerHTML=personalData["firstname"]+" "+personalData["familyname"];
+			document.getElementById(prefix+"pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
+			document.getElementById(prefix+"pdemail").innerHTML=personalData["email"];
+			listAllMessages(email, isCurrUser);
+
+/* CONFLICT
 	var prefix="";
 
 
@@ -263,14 +307,21 @@ function loadPersonalData(email, isCurrUser){
 
 				listAllMessages(email, isCurrUser);
 	        }
+*/
 	    }
+	}
 
+	if(isCurrUser){
+		// personalData = serverstub.getUserDataByToken(token)["data"];
+		prefix = "";
 	    con.open("GET", "/getuserdatabytoken?token=" + token, true);
 	    con.send(null);
 	}
 	else{
-		personalData = serverstub.getUserDataByEmail(token, email)["data"];
+		//personalData = serverstub.getUserDataByEmail(token, email)["data"];
 		prefix = "browse_";
+		con.open("GET", "/getuserdatabyemail?token=" + token+"&email=" + email, true);
+	    con.send(null);
 	}
 	
 	//-----Gamla koden-----
