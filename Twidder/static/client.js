@@ -183,7 +183,7 @@ function loadSearchUser(email){
 				document.getElementById(prefix+"pdlocation").innerHTML=personalData["city"]+", "+personalData["country"];
 				document.getElementById(prefix+"pdemail").innerHTML=personalData["email"];
 				document.getElementById("browseResult").style.display="block";
-				listAllMessages(email, isCurrUser);
+				listAllMessages(email, false);
 	        }
 	        else{
 	        	document.getElementById("browseResultMessages").innerHTML = message;
