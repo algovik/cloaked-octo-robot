@@ -1,6 +1,7 @@
 from flask import Flask, g, request, render_template
 from random import choice
 from gevent.pywsgi import WSGIServer
+from geventwebsocket.handler import WebSocketHandler
 import database_helper
 import hashlib
 import json
@@ -52,9 +53,6 @@ def background():
 def sign_in():
     email = request.form.get('email')
     password = request.form.get('password')
-
-    print("Email: " + email + " , Passsword: " + password)
-
     if database_helper.verify_email(email) and verify_password(email, password):
         token = ''
         letters = map(chr, range(97, 123) + range(65,91) + range(49,58))
@@ -181,15 +179,44 @@ def get_user_data_by_email(email):
         return_data = {"success":False}
     return return_data
 
+
+socketConnections = {}
+
+@app.route('/socketconnect', methods=['GET'])
+def socket_connect():
+    if request.environ.get('wsgi.websocket'):
+        wsock = request.environ['wsgi.websocket']
+        if not wsock:
+            abort(400, 'Expected websocket request.')
+        while True:
+           message = wsock.receive()
+           socketConnections[message] = wsock
+           wsock.send("Connection established.")
+    return 'Done'
+
+
+def send_notification(token):
+    socket = socketConnections[token]
+    socket.send("notify")
+
+
 #Parameters: token
 #Returns: {"success":True/False, "message":"success/error messages", "data":[{"sender":sender, "content":message content},..]}
 @app.route('/getusermessagesbytoken', methods=['GET'])
-def get_user_messages_by_token():
+def get_user_messages_by_token_route():
     token = request.args.get('token')
-    if not_none(token)==False or database_helper.check_if_logged_in(token)==False:
+    if not_none(token):
+        return json.dumps(get_user_messages_by_token(token))
+    else:
         return json.dumps({"success":False, "message":"Invalid token."})
-    email = database_helper.token_to_email(token)
-    return json.dumps(get_user_messages_by_email(token, email))
+
+def get_user_messages_by_token(token):
+    if database_helper.check_if_logged_in(token):
+        email = database_helper.token_to_email(token)
+        return get_user_messages_by_email(token, email)
+    else:
+        return {"success":False, "message":"Invalid token."}
+
 
 #Parameters: token, email
 @app.route('/getusermessagesbyemail', methods=['GET'])
@@ -199,6 +226,7 @@ def get_user_messages_by_email_route():
     if not_none(token)==False or not_none(email)==False:
         return json.dumps({"success":False, "message":"Invalid token or email."})
     return json.dumps(get_user_messages_by_email(token, email))
+
 
 def get_user_messages_by_email(token, email):
     if database_helper.check_if_logged_in(token):
@@ -226,6 +254,7 @@ def post_message():
         if not_none(message):
             if database_helper.verify_email(email):
                 database_helper.insert_new_message(sender, message, email)
+                send_notification(database_helper.email_to_token(email))
                 return_data = {"success":True, "message":"Message has been sent."}
             else:
                 return_data = {"success":False, "message":"No such recipient."}
@@ -323,5 +352,5 @@ def close_db(error):
 
 if __name__ == '__main__':
     #app.run()
-    http_server = WSGIServer(('', 5000), app)
+    http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
     http_server.serve_forever()

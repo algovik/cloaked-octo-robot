@@ -90,6 +90,13 @@ def token_to_email(token):
     result = cur.fetchone()
     return result[0]
 
+def email_to_token(email):
+    db = get_db()
+    cur = db.execute("SELECT Token FROM LoggedInUsers WHERE Email='" + email + "'")
+    result = cur.fetchone()
+    return result[0]
+
+
 #Working
 def get_user_data(email):
     db = get_db()

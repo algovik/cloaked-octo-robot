@@ -237,7 +237,21 @@ function validateLogin(formVar){
 	            bool=serverResponse["success"];
 				if(bool){
 					localStorage.token = serverResponse["data"]; //If login is successful, a session token is stored locally
-					location.reload();
+					
+					// var socket = new WebSocket("ws://localhost:5000/autorefresh");
+
+					// socket.onopen = function(event){
+					// 	alert("onopen");
+					// 	socket.send("Handshake");
+					// }
+
+					// socket.onmessage = function(event){
+					// 	alert("onmessage");
+					// 	console.log(event.data);
+					// }
+
+					initiateSocket();
+					loadView();
 				} else {
 					changeBorderColor(formVar["username"], 2);
 					changeBorderColor(formVar["password"], 2);
@@ -265,6 +279,28 @@ function validateLogin(formVar){
 	}
 	return false;
 }
+
+function initiateSocket(){
+	
+	var socket = new WebSocket("ws://localhost:5000/socketconnect");
+
+	socket.onopen = function(event){
+		socket.send(localStorage.token);
+	}
+
+	socket.onmessage = function(event){
+		serverResponse = event.data;
+
+		if(serverResponse == "notify"){
+			refreshWall(true);
+		}
+	}
+
+	socket.onerror = function(error){
+		console.log("Socket Error: " + error);
+	}
+}
+
 
 function getNameByEmail(email){
 	var userData = serverstub.getUserDataByEmail(localStorage.token,email)["data"];
